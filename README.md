@@ -1,123 +1,118 @@
-# Banking Application
+# [Banking Application](https://github.com/piyushku0331/Java_SpringBoot_Project) &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/piyushku0331/Java_SpringBoot_Project/blob/main/README.md#license) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.9-brightgreen.svg)](https://spring.io/projects/spring-boot) [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/) [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange.svg)](https://www.mysql.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/piyushku0331/Java_SpringBoot_Project/pulls)
 
-A modern full-stack banking application built with React frontend and Spring Boot backend, featuring secure authentication, account management, transactions, and loan services.
+Banking Application is a modern full-stack web application for secure banking operations.
 
-## 🏗️ Architecture
+* **Secure Authentication:** JWT-based authentication with BCrypt password encryption ensures secure user sessions and data protection.
+* **Account Management:** Comprehensive account creation, viewing, and management with real-time balance updates and transaction history.
+* **Transaction Processing:** Seamless money transfers, deposits, and withdrawals with instant processing and detailed transaction records.
+* **Loan Services:** Complete loan application system with approval workflows and repayment tracking.
 
-- **Frontend**: React 18 with modern hooks, routing, and state management
-- **Backend**: Spring Boot 3.4.9 with JWT authentication, JPA, and MySQL
-- **Database**: MySQL 8.0 with proper indexing and relationships
-- **Security**: JWT-based authentication with BCrypt password encryption
+[Learn how to use Banking Application in your environment](#installation).
 
-## 📁 Project Structure
+## Installation
 
+Banking Application has been designed for easy setup and deployment, and **you can run it locally or deploy it to the cloud**:
+
+* Use [Quick Start](#quick-start) to get the application running locally.
+* [Configure Database](#database-setup) to connect to your MySQL instance.
+* [Deploy to Production](#production-deployment) when you're ready to go live.
+
+## Documentation
+
+You can find comprehensive setup instructions below.
+
+Check out the [Quick Start](#quick-start) section for immediate setup.
+
+The documentation covers:
+
+* [Installation](#installation)
+* [Quick Start](#quick-start)
+* [Database Setup](#database-setup)
+* [API Reference](#api-reference)
+* [Contributing](#contributing)
+
+## Examples
+
+We have several examples to get you started. Here's a simple transaction example:
+
+```java
+@RestController
+@RequestMapping("/api/customer")
+public class TransactionController {
+    
+    @PostMapping("/transactions")
+    public ResponseEntity<Transaction> createTransaction(@RequestBody TransactionRequest request) {
+        Transaction transaction = transactionService.processTransaction(request);
+        return ResponseEntity.ok(transaction);
+    }
+}
 ```
-SpringBoot_Project_Frontend/
-├── frontend/          # React application
-│   ├── src/
-│   │   ├── components/    # React components
-│   │   ├── context/       # Authentication context
-│   │   ├── assets/        # Static assets
-│   │   └── ...
-│   ├── public/
-│   └── package.json
-├── backend/           # Spring Boot application
-│   └── springboot_project_backend/
-│       ├── src/
-│       │   ├── main/java/     # Java source code
-│       │   └── main/resources/ # Application properties
-│       ├── pom.xml
-│       └── ...
-└── README.md
+
+And here's how the frontend handles authentication:
+
+```jsx
+import { useAuth } from './context/AuthContext';
+
+function LoginForm() {
+  const { login } = useAuth();
+  
+  const handleSubmit = async (credentials) => {
+    try {
+      await login(credentials);
+      navigate('/dashboard');
+    } catch (error) {
+      setError('Invalid credentials');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* Login form fields */}
+    </form>
+  );
+}
 ```
 
-## 🚀 Getting Started
+## Quick Start
 
 ### Prerequisites
+- Java 17+
+- Node.js 16+
+- MySQL 8.0+
+- Maven 3.6+
 
-- **Java 17+** (for Spring Boot backend)
-- **Node.js 16+** and npm (for React frontend)
-- **MySQL 8.0+** (for database)
-- **Maven 3.6+** (for building backend)
+### Setup
 
-### Installation
+```bash
+# Clone the repository
+git clone https://github.com/piyushku0331/Java_SpringBoot_Project.git
+cd Java_SpringBoot_Project
 
-1. **Clone the repository**
-   ```bash
-   git clone <your-repo-url>
-   cd SpringBoot_Project_Frontend
-   ```
+# Setup Backend
+cd backend/springboot_project_backend
+mvn clean install
+mvn spring-boot:run
 
-2. **Setup Backend**
-   ```bash
-   cd backend/springboot_project_backend
-   
-   # Configure database in src/main/resources/application.properties
-   # Update database URL, username, and password
-   
-   # Build and run
-   mvn clean install
-   mvn spring-boot:run
-   ```
-
-3. **Setup Frontend**
-   ```bash
-   cd frontend
-   
-   # Install dependencies
-   npm install
-   
-   # Start development server
-   npm start
-   ```
-
-4. **Setup Database**
-   - Create a MySQL database named `banking_db`
-   - Update connection details in `application.properties`
-   - The application will auto-create tables on first run
-
-### Access the Application
-
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8080
-- **Database**: localhost:3306
-
-## 🔧 Configuration
-
-### Backend Configuration
-
-Edit `backend/springboot_project_backend/src/main/resources/application.properties`:
-
-```properties
-# Database Configuration
-spring.datasource.url=jdbc:mysql://localhost:3306/banking_db
-spring.datasource.username=your_username
-spring.datasource.password=your_password
-
-# JWT Configuration
-jwt.secret=your_jwt_secret_key
-
-# Server Configuration
-server.port=8080
+# Setup Frontend (in new terminal)
+cd frontend
+npm install
+npm start
 ```
 
-### Frontend Configuration
+### Database Setup
+1. Create MySQL database: `banking_db`
+2. Update `application.properties` with your database credentials
+3. Application will auto-create tables on first run
 
-The frontend is configured to connect to the backend at `http://localhost:8080/api`. If you change the backend port, update the API base URL in the frontend service files.
+### Access
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8080
 
-## 🔒 Security Features
+## API Reference
 
-- **JWT Authentication**: Secure token-based authentication
-- **Password Encryption**: BCrypt hashing for user passwords
-- **CORS Configuration**: Proper cross-origin resource sharing setup
-- **Input Validation**: Server-side validation for all API endpoints
-- **SQL Injection Prevention**: JPA/Hibernate parameterized queries
-
-## 📝 API Endpoints
-
-### Authentication
+### Authentication Endpoints
 - `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
+- `POST /api/auth/login` - User login  
 - `POST /api/auth/reset-password` - Password reset
 
 ### Account Management
@@ -133,116 +128,15 @@ The frontend is configured to connect to the backend at `http://localhost:8080/a
 - `GET /api/customer/loans` - Get user loans
 - `POST /api/customer/loans` - Apply for loan
 
-## 🛠️ Development
+## Contributing
 
-### Backend Development
+The main purpose of this repository is to continue evolving the Banking Application, making it more secure and feature-rich. Development happens in the open on GitHub, and we are grateful to the community for contributing bugfixes and improvements.
 
-```bash
-cd backend/springboot_project_backend
+### [Contributing Guide](https://github.com/piyushku0331/Java_SpringBoot_Project/blob/main/CONTRIBUTING.md)
+Read our contributing guide to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes.
 
-# Run in development mode
-mvn spring-boot:run -Dspring.profiles.active=dev
+### [Good First Issues](https://github.com/piyushku0331/Java_SpringBoot_Project/labels/good%20first%20issue)
+To help you get your feet wet and get familiar with our contribution process, we have a list of good first issues that contain bugs with a relatively limited scope. This is a great place to get started.
 
-# Run tests
-mvn test
-
-# Build for production
-mvn clean package -DskipTests
-```
-
-### Frontend Development
-
-```bash
-cd frontend
-
-# Start development server
-npm start
-
-# Run tests
-npm test
-
-# Build for production
-npm run build
-```
-
-## 🧪 Testing
-
-### Backend Tests
-```bash
-cd backend/springboot_project_backend
-mvn test
-```
-
-### Frontend Tests
-```bash
-cd frontend
-npm test
-```
-
-## 🚀 Production Build
-
-### Backend
-```bash
-cd backend/springboot_project_backend
-mvn clean package -DskipTests
-java -jar target/springboot_project_backend-*.jar
-```
-
-### Frontend
-```bash
-cd frontend
-npm run build
-# Serve the build folder with a web server
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see below for details:
-
-```
-MIT License
-
-Copyright (c) 2024 Banking Application
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
-## 📞 Support
-
-For support and questions:
-- Create an issue in the repository
-- Check the documentation above
-- Review the code comments for implementation details
-
-## 🔮 Future Enhancements
-
-- [ ] Add comprehensive test coverage
-- [ ] Implement email notifications
-- [ ] Add transaction categories and budgeting
-- [ ] Mobile responsive design improvements
-- [ ] API rate limiting
-- [ ] Advanced security features (2FA, etc.)
+### License
+Banking Application is [MIT licensed](./LICENSE).
