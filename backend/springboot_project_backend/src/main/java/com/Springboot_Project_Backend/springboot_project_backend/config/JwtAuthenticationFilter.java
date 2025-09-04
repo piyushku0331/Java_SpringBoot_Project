@@ -37,23 +37,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
+            System.out.println("JWT Filter - Token found: " + jwt.substring(0, Math.min(20, jwt.length())) + "...");
             try {
                 username = jwtUtil.extractUsername(jwt);
+                System.out.println("JWT Filter - Username extracted: " + username);
             } catch (Exception e) {
+                System.out.println("JWT Filter - Token parsing failed: " + e.getMessage());
                 logger.warn("JWT token parsing failed: " + e.getMessage());
             }
+        } else {
+            System.out.println("JWT Filter - No Authorization header or invalid format. Header: " + authorizationHeader);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.loadUserByUsername(username);
+            try {
+                UserDetails userDetails = userService.loadUserByUsername(username);
 
-            if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
-                UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authenticationToken.setDetails(
-                    new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                if (jwtUtil.validateToken(jwt, userDetails.getUsername())) {
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authenticationToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    System.out.println("JWT Filter - Authentication successful for user: " + username);
+                } else {
+                    System.out.println("JWT Filter - Token validation failed for user: " + username);
+                }
+            } catch (Exception e) {
+                System.out.println("JWT Filter - Error loading user details: " + e.getMessage());
             }
         }
 
