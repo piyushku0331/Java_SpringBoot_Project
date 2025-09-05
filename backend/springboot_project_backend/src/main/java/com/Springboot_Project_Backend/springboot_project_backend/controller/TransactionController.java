@@ -16,10 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class TransactionController {
+
+    private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
     @Autowired
     private TransactionService transactionService;
@@ -40,26 +45,30 @@ public class TransactionController {
     @GetMapping("/transactions")
     public ResponseEntity<?> getTransactions(@RequestParam(required = false) Long accountId) {
         try {
-            User currentUser = getCurrentUser();
-            List<Transaction> transactions;
-
-            if (accountId != null) {
-                // Verify the account belongs to the current user
-                if (!transactionService.isAccountOwnedByUser(accountId, currentUser.getId())) {
-                    Map<String, String> error = new HashMap<>();
-                    error.put("error", "Access denied: Account does not belong to user");
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
-                }
-                transactions = transactionService.getTransactionsByAccountId(accountId);
-            } else {
-                // Return transactions for all user's accounts
-                transactions = transactionService.getTransactionsByUserId(currentUser.getId());
-            }
+            List<Transaction> transactions = getTransactionsForUser(accountId);
             return ResponseEntity.ok(transactions);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Access denied")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(createErrorResponse(e.getMessage()));
+            }
+            return ResponseEntity.badRequest().body(createErrorResponse(e.getMessage()));
         } catch (Exception e) {
-            Map<String, String> error = new HashMap<>();
-            error.put("error", e.getMessage());
-            return ResponseEntity.badRequest().body(error);
+            return ResponseEntity.badRequest().body(createErrorResponse(e.getMessage()));
+        }
+    }
+
+    @GetMapping("/customer/transactions")
+    public ResponseEntity<?> getCustomerTransactions(@RequestParam(required = false) Long accountId) {
+        try {
+            List<Transaction> transactions = getTransactionsForUser(accountId);
+            return ResponseEntity.ok(transactions);
+        } catch (RuntimeException e) {
+            if (e.getMessage().contains("Access denied")) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(createErrorResponse(e.getMessage()));
+            }
+            return ResponseEntity.badRequest().body(createErrorResponse(e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(createErrorResponse(e.getMessage()));
         }
     }
 
@@ -102,28 +111,21 @@ public class TransactionController {
     @PostMapping("/transactions")
     public ResponseEntity<?> createTransaction(@RequestBody Map<String, Object> request) {
         try {
-            System.out.println("Create transaction request received: " + request);
+            logger.info("Create transaction request received: {}", request);
 
-            // Validate required fields
-            if (request.get("accountId") == null || request.get("transactionType") == null ||
-                request.get("amount") == null || request.get("description") == null) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "Missing required fields: accountId, transactionType, amount, description");
-                System.out.println("Validation failed: Missing required fields");
-                return ResponseEntity.badRequest().body(error);
-            }
+            validateCreateTransactionRequest(request);
 
             Long accountId = Long.parseLong(request.get("accountId").toString());
             String transactionType = request.get("transactionType").toString();
             BigDecimal amount = new BigDecimal(request.get("amount").toString());
             String description = request.get("description").toString();
 
-            System.out.println("Parsed data - AccountId: " + accountId + ", Type: " + transactionType + ", Amount: " + amount);
+            logger.info("Parsed data - AccountId: {}, Type: {}, Amount: {}", accountId, transactionType, amount);
 
             Transaction transaction = transactionService.createTransaction(
                 accountId, transactionType, amount, description);
 
-            System.out.println("Transaction created successfully with ID: " + transaction.getId());
+            logger.info("Transaction created successfully with ID: {}", transaction.getId());
 
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Transaction created successfully");
@@ -131,18 +133,17 @@ public class TransactionController {
 
             return ResponseEntity.ok(response);
         } catch (NumberFormatException e) {
-            System.out.println("Number format exception: " + e.getMessage());
+            logger.error("Number format exception: {}", e.getMessage());
             Map<String, String> error = new HashMap<>();
             error.put("error", "Invalid number format for accountId or amount");
             return ResponseEntity.badRequest().body(error);
         } catch (IllegalArgumentException e) {
-            System.out.println("Illegal argument exception: " + e.getMessage());
+            logger.error("Illegal argument exception: {}", e.getMessage());
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Invalid transaction type");
+            error.put("error", e.getMessage());
             return ResponseEntity.badRequest().body(error);
         } catch (Exception e) {
-            System.out.println("Exception creating transaction: " + e.getMessage());
-            e.printStackTrace();
+            logger.error("Exception creating transaction: {}", e.getMessage());
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.badRequest().body(error);
@@ -152,13 +153,7 @@ public class TransactionController {
     @PostMapping("/transactions/transfer")
     public ResponseEntity<?> transferFunds(@RequestBody Map<String, Object> request) {
         try {
-            // Validate required fields
-            if (request.get("fromAccountId") == null || request.get("toAccountNumber") == null ||
-                request.get("amount") == null || request.get("description") == null) {
-                Map<String, String> error = new HashMap<>();
-                error.put("error", "Missing required fields: fromAccountId, toAccountNumber, amount, description");
-                return ResponseEntity.badRequest().body(error);
-            }
+            validateTransferFundsRequest(request);
 
             Long fromAccountId = Long.parseLong(request.get("fromAccountId").toString());
             String toAccountNumber = request.get("toAccountNumber").toString();
@@ -177,10 +172,46 @@ public class TransactionController {
             Map<String, String> error = new HashMap<>();
             error.put("error", "Invalid number format for fromAccountId or amount");
             return ResponseEntity.badRequest().body(error);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
             error.put("error", e.getMessage());
             return ResponseEntity.badRequest().body(error);
+        }
+    }
+
+    private void validateCreateTransactionRequest(Map<String, Object> request) {
+        if (request.get("accountId") == null || request.get("transactionType") == null ||
+            request.get("amount") == null || request.get("description") == null) {
+            throw new IllegalArgumentException("Missing required fields: accountId, transactionType, amount, description");
+        }
+    }
+
+    private void validateTransferFundsRequest(Map<String, Object> request) {
+        if (request.get("fromAccountId") == null || request.get("toAccountNumber") == null ||
+            request.get("amount") == null || request.get("description") == null) {
+            throw new IllegalArgumentException("Missing required fields: fromAccountId, toAccountNumber, amount, description");
+        }
+    }
+
+    private Map<String, String> createErrorResponse(String message) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", message);
+        return error;
+    }
+
+    private List<Transaction> getTransactionsForUser(Long accountId) {
+        User currentUser = getCurrentUser();
+        if (accountId != null) {
+            if (!transactionService.isAccountOwnedByUser(accountId, currentUser.getId())) {
+                throw new RuntimeException("Access denied: Account does not belong to user");
+            }
+            return transactionService.getTransactionsByAccountId(accountId);
+        } else {
+            return transactionService.getTransactionsByUserId(currentUser.getId());
         }
     }
 }
