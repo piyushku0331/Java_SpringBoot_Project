@@ -176,3 +176,28 @@ target/
 *.db
 *.sqlite
 *.sqlite3
+
+# Additional cleanup rules
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Documentation build
+docs/build/
