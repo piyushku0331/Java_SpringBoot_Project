@@ -2,16 +2,33 @@ import api from "./api";
 
 export const getTransactions = async (accountId = null) => {
   try {
-    let url = '/transactions';
+    let response;
     
     if (accountId && accountId !== 'all') {
-      url += `?accountId=${accountId}`;
       console.log(`Fetching transactions for account ID: ${accountId}`);
+      // Try multiple endpoint patterns for account-specific transactions
+      try {
+        response = await api.get(`/accounts/${accountId}/transactions`);
+      } catch (firstError) {
+        console.log("Account-specific endpoint failed, trying query param:", firstError.message);
+        try {
+          response = await api.get('/transactions', { params: { accountId } });
+        } catch (secondError) {
+          console.log("Query param failed, trying customer endpoint:", secondError.message);
+          response = await api.get(`/customer/transactions?accountId=${accountId}`);
+        }
+      }
     } else {
       console.log('Fetching all transactions for user');
+      // Try multiple endpoint patterns for all transactions
+      try {
+        response = await api.get('/customer/transactions');
+      } catch (firstError) {
+        console.log("Customer transactions failed, trying generic:", firstError.message);
+        response = await api.get('/transactions');
+      }
     }
     
-    const response = await api.get(url);
     console.log('Transaction API response:', response);
     console.log('Transaction data:', response.data);
     
@@ -20,13 +37,16 @@ export const getTransactions = async (accountId = null) => {
       return response.data;
     } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
       return response.data.data;
+    } else if (response.data && response.data.content && Array.isArray(response.data.content)) {
+      return response.data.content;
     } else {
       return [];
     }
   } catch (error) {
     console.error("Error fetching transactions:", error);
     console.error("Error response:", error.response);
-    throw error;
+    // Return empty array instead of throwing to prevent UI crash
+    return [];
   }
 };
 

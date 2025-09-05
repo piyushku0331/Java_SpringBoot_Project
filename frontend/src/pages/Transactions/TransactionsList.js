@@ -52,13 +52,23 @@ const TransactionsList = () => {
       try {
         setLoading(true);
         const data = await getTransactions(selectedAccountId !== 'all' ? selectedAccountId : null);
+        console.log('Received transactions data:', data);
         // Ensure data is an array
         setTransactions(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
-        setError('Failed to load transactions. Please try again later.');
-        setTransactions([]); // Set empty array on error
         console.error('Error fetching transactions:', err);
+        setTransactions([]); // Set empty array on error
+        // Check if it's a network error (backend not running)
+        if (err.code === 'ERR_NETWORK' || err.message.includes('Network Error')) {
+          setError('Backend server is not running. Please start the Spring Boot application on port 8080.');
+        } else if (err.response?.status === 401) {
+          setError('Authentication failed. Please log in again.');
+        } else if (err.response?.status === 403) {
+          setError('Access denied. Please check your permissions.');
+        } else {
+          setError('Failed to load transactions. Please try again later.');
+        }
       } finally {
         setLoading(false);
       }

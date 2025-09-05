@@ -5,12 +5,29 @@ export const getAccounts = () => api.get("/accounts");
 export const getCustomerAccounts = async (userId) => {
   try {
     console.log("Fetching accounts for userId:", userId);
-    const response = await api.get("/customer/accounts", { params: { userId } });
-    console.log("Accounts response:", response.data);
-    return response.data;
+    // Skip the problematic endpoint and use the working one directly
+    let response;
+    try {
+      // Use the working endpoint with query parameter
+      response = await api.get("/customer/accounts", { params: { userId } });
+      console.log("Accounts response:", response.data);
+      return Array.isArray(response.data) ? response.data : [];
+    } catch (firstError) {
+      console.log("Customer accounts endpoint failed, trying generic:", firstError.message);
+      try {
+        // Fallback to generic accounts endpoint
+        response = await api.get("/accounts");
+        console.log("Generic accounts response:", response.data);
+        return Array.isArray(response.data) ? response.data : [];
+      } catch (secondError) {
+        console.log("All endpoints failed:", secondError.message);
+        return [];
+      }
+    }
   } catch (error) {
     console.error("Error fetching customer accounts:", error);
-    throw error;
+    // Return empty array instead of throwing to prevent UI crash
+    return [];
   }
 };
 

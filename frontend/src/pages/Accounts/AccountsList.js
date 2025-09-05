@@ -24,11 +24,21 @@ const AccountsList = () => {
         setLoading(true);
         console.log('User ID:', user.id);
         const data = await getCustomerAccounts(user.id);
-        setAccounts(data);
+        console.log('Received accounts data:', data);
+        setAccounts(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
-        setError('Failed to load accounts. Please try again later.');
         console.error('Error fetching accounts:', err);
+        // Check if it's a network error (backend not running)
+        if (err.code === 'ERR_NETWORK' || err.message.includes('Network Error')) {
+          setError('Backend server is not running. Please start the Spring Boot application on port 8080.');
+        } else if (err.response?.status === 401) {
+          setError('Authentication failed. Please log in again.');
+        } else if (err.response?.status === 403) {
+          setError('Access denied. Please check your permissions.');
+        } else {
+          setError('Failed to load accounts. Please try again later.');
+        }
       } finally {
         setLoading(false);
       }
