@@ -14,6 +14,9 @@ import CreateTransaction from "../pages/Transactions/CreateTransaction";
 import LoansList from "../pages/Loans/LoansList";
 import LoanDetail from "../pages/Loans/LoanDetail";
 import LoanApplication from "../pages/Loans/LoanApplication";
+import AdminLogin from "../components/admin/AdminLogin";
+import AdminDashboard from "../components/admin/AdminDashboard";
+import UserManagement from "../components/admin/UserManagement";
 import NotFound from "../pages/NotFound/NotFound";
 
 export default function AppRoutes() {
@@ -104,6 +107,11 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      {/* Admin Routes */}
+      <Route path="/admin/login" element={<AdminLogin />} />
+      <Route path="/admin/dashboard" element={<AdminDashboard />} />
+      <Route path="/admin/users" element={<UserManagement />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

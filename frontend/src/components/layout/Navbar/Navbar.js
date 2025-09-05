@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../../../context/AuthContext';
 import Button from '../../common/Button/Button';
 import { useState, useEffect } from 'react';
+import './Navbar.css';
 
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
@@ -44,6 +45,7 @@ export default function Navbar() {
           <>
             <Link to="/login" onClick={closeMobileMenu}>Login</Link>
             <Link to="/register" onClick={closeMobileMenu}>Register</Link>
+            <Link to="/admin/login" onClick={closeMobileMenu} className="admin-link">Admin</Link>
           </>
         ) : (
           <>
@@ -109,6 +111,10 @@ export default function Navbar() {
                   <Link to="/register" onClick={closeMobileMenu}>
                     <span className="nav-icon">📝</span>
                     Register
+                  </Link>
+                  <Link to="/admin/login" onClick={closeMobileMenu} className="admin-link">
+                    <span className="nav-icon">⚙️</span>
+                    Admin
                   </Link>
                 </>
               ) : (

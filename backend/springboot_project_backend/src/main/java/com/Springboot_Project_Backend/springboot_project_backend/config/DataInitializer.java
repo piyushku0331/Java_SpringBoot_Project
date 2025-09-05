@@ -1,9 +1,11 @@
 package com.Springboot_Project_Backend.springboot_project_backend.config;
 
 import com.Springboot_Project_Backend.springboot_project_backend.entity.Account;
+import com.Springboot_Project_Backend.springboot_project_backend.entity.Admin;
 import com.Springboot_Project_Backend.springboot_project_backend.entity.Transaction;
 import com.Springboot_Project_Backend.springboot_project_backend.entity.User;
 import com.Springboot_Project_Backend.springboot_project_backend.repository.AccountRepository;
+import com.Springboot_Project_Backend.springboot_project_backend.repository.AdminRepository;
 import com.Springboot_Project_Backend.springboot_project_backend.repository.TransactionRepository;
 import com.Springboot_Project_Backend.springboot_project_backend.repository.UserRepository;
 import org.slf4j.Logger;
@@ -33,6 +35,9 @@ public class DataInitializer implements CommandLineRunner {
     private TransactionRepository transactionRepository;
 
     @Autowired
+    private AdminRepository adminRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     private final Random random = new Random();
@@ -43,6 +48,12 @@ public class DataInitializer implements CommandLineRunner {
 
         // Reset auto-increment for testing (optional - uncomment if needed)
         // resetAutoIncrement();
+
+        // Create default admin if none exists
+        if (adminRepository.count() == 0) {
+            logger.info("No admins found, creating default admin");
+            createDefaultAdmin();
+        }
 
         // Check if we need to create sample data
         if (userRepository.count() == 0) {
@@ -171,5 +182,23 @@ public class DataInitializer implements CommandLineRunner {
 
     private String generateAccountNumber() {
         return "ACC" + String.format("%010d", random.nextInt(1000000000));
+    }
+
+    private void createDefaultAdmin() {
+        try {
+            Admin defaultAdmin = new Admin();
+            defaultAdmin.setFirstName("Super");
+            defaultAdmin.setLastName("Admin");
+            defaultAdmin.setEmail("admin@bank.com");
+            defaultAdmin.setPassword(passwordEncoder.encode("admin123"));
+            defaultAdmin.setPhoneNumber("9999999999");
+            defaultAdmin.setRole(Admin.AdminRole.SUPER_ADMIN);
+            defaultAdmin.setStatus(Admin.AdminStatus.ACTIVE);
+
+            Admin savedAdmin = adminRepository.save(defaultAdmin);
+            logger.info("Default admin created successfully with email: {}", savedAdmin.getEmail());
+        } catch (Exception e) {
+            logger.error("Error creating default admin: {}", e.getMessage());
+        }
     }
 }

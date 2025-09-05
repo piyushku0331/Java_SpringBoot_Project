@@ -1,0 +1,341 @@
+/* Page Transition Effects */
+.page-transition {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Fade Transition */
+.fade-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.fade-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Slide Transition */
+.slide-enter {
+  opacity: 0;
+  transform: translateX(100px) rotateY(-15deg);
+}
+
+.slide-enter-active {
+  opacity: 1;
+  transform: translateX(0) rotateY(0deg);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.slide-exit {
+  opacity: 1;
+  transform: translateX(0) rotateY(0deg);
+}
+
+.slide-exit-active {
+  opacity: 0;
+  transform: translateX(-100px) rotateY(15deg);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 3D Flip Transition */
+.flip-enter {
+  opacity: 0;
+  transform: rotateY(-90deg) scale(0.8);
+}
+
+.flip-enter-active {
+  opacity: 1;
+  transform: rotateY(0deg) scale(1);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.flip-exit {
+  opacity: 1;
+  transform: rotateY(0deg) scale(1);
+}
+
+.flip-exit-active {
+  opacity: 0;
+  transform: rotateY(90deg) scale(0.8);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Zoom Transition */
+.zoom-enter {
+  opacity: 0;
+  transform: scale(0.3) rotateX(-45deg);
+}
+
+.zoom-enter-active {
+  opacity: 1;
+  transform: scale(1) rotateX(0deg);
+  transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.zoom-exit {
+  opacity: 1;
+  transform: scale(1) rotateX(0deg);
+}
+
+.zoom-exit-active {
+  opacity: 0;
+  transform: scale(0.3) rotateX(45deg);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* 3D Cube Transition */
+.cube-enter {
+  opacity: 0;
+  transform: rotateX(-90deg) translateZ(-100px);
+}
+
+.cube-enter-active {
+  opacity: 1;
+  transform: rotateX(0deg) translateZ(0);
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.cube-exit {
+  opacity: 1;
+  transform: rotateX(0deg) translateZ(0);
+}
+
+.cube-exit-active {
+  opacity: 0;
+  transform: rotateX(90deg) translateZ(-100px);
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Elastic Transition */
+.elastic-enter {
+  opacity: 0;
+  transform: scale(0.3) rotateZ(-10deg);
+}
+
+.elastic-enter-active {
+  opacity: 1;
+  transform: scale(1) rotateZ(0deg);
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.elastic-exit {
+  opacity: 1;
+  transform: scale(1) rotateZ(0deg);
+}
+
+.elastic-exit-active {
+  opacity: 0;
+  transform: scale(0.3) rotateZ(10deg);
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Page Load Animation */
+.page-load {
+  animation: pageLoad 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes pageLoad {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) rotateX(-10deg) scale(0.95);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-5px) rotateX(5deg) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+  }
+}
+
+/* Staggered Page Elements */
+.page-stagger > * {
+  animation: staggerIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.page-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.page-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.page-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.page-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.page-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.page-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes staggerIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) rotateX(-5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg);
+  }
+}
+
+/* Loading Screen Transition */
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.loading-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loading-spinner-3d {
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(102, 126, 234, 0.2);
+  border-top: 4px solid #667eea;
+  border-radius: 50%;
+  animation: spin3D 1s linear infinite;
+  transform-style: preserve-3d;
+}
+
+@keyframes spin3D {
+  0% { 
+    transform: rotate(0deg) rotateX(0deg) rotateY(0deg); 
+  }
+  25% { 
+    transform: rotate(90deg) rotateX(90deg) rotateY(0deg); 
+  }
+  50% { 
+    transform: rotate(180deg) rotateX(180deg) rotateY(90deg); 
+  }
+  75% { 
+    transform: rotate(270deg) rotateX(270deg) rotateY(180deg); 
+  }
+  100% { 
+    transform: rotate(360deg) rotateX(360deg) rotateY(360deg); 
+  }
+}
+
+/* Route Transition Container */
+.route-transition {
+  position: relative;
+  min-height: 100vh;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+/* Modal Transition */
+.modal-enter {
+  opacity: 0;
+  transform: scale(0.8) rotateX(-15deg) translateY(50px);
+}
+
+.modal-enter-active {
+  opacity: 1;
+  transform: scale(1) rotateX(0deg) translateY(0);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.modal-exit {
+  opacity: 1;
+  transform: scale(1) rotateX(0deg) translateY(0);
+}
+
+.modal-exit-active {
+  opacity: 0;
+  transform: scale(0.8) rotateX(15deg) translateY(50px);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Toast Transition */
+.toast-enter {
+  opacity: 0;
+  transform: translateX(100%) rotateY(-15deg);
+}
+
+.toast-enter-active {
+  opacity: 1;
+  transform: translateX(0) rotateY(0deg);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.toast-exit {
+  opacity: 1;
+  transform: translateX(0) rotateY(0deg);
+}
+
+.toast-exit-active {
+  opacity: 0;
+  transform: translateX(100%) rotateY(15deg);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .fade-enter,
+  .fade-enter-active,
+  .fade-exit,
+  .fade-exit-active,
+  .slide-enter,
+  .slide-enter-active,
+  .slide-exit,
+  .slide-exit-active,
+  .flip-enter,
+  .flip-enter-active,
+  .flip-exit,
+  .flip-exit-active,
+  .zoom-enter,
+  .zoom-enter-active,
+  .zoom-exit,
+  .zoom-exit-active,
+  .cube-enter,
+  .cube-enter-active,
+  .cube-exit,
+  .cube-exit-active,
+  .elastic-enter,
+  .elastic-enter-active,
+  .elastic-exit,
+  .elastic-exit-active,
+  .page-load,
+  .page-stagger > *,
+  .loading-spinner-3d,
+  .modal-enter,
+  .modal-enter-active,
+  .modal-exit,
+  .modal-exit-active,
+  .toast-enter,
+  .toast-enter-active,
+  .toast-exit,
+  .toast-exit-active {
+    animation: none !important;
+    transition: opacity 0.2s ease !important;
+  }
+  
+  .fade-enter,
+  .slide-enter,
+  .flip-enter,
+  .zoom-enter,
+  .cube-enter,
+  .elastic-enter,
+  .modal-enter,
+  .toast-enter {
+    transform: none !important;
+  }
+}

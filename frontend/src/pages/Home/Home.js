@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaShieldAlt, FaChartLine, FaMobileAlt, FaRocket, FaStar, FaGem, FaLinkedin, FaTwitter } from "react-icons/fa";
+import './Home.css';
 
 export default function Home() {
 

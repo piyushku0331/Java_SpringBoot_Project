@@ -3,8 +3,10 @@ package com.Springboot_Project_Backend.springboot_project_backend.repository;
 import com.Springboot_Project_Backend.springboot_project_backend.entity.Account;
 import com.Springboot_Project_Backend.springboot_project_backend.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,4 +16,7 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findByUserId(Long userId);
     Optional<Account> findByAccountNumber(String accountNumber);
     boolean existsByAccountNumber(String accountNumber);
+    
+    @Query("SELECT COALESCE(SUM(a.balance), 0) FROM Account a")
+    BigDecimal getTotalBalance();
 }

@@ -2,14 +2,27 @@ import api from "./api";
 
 export const getTransactions = async (accountId = null) => {
   try {
-    if (!accountId) {
-      throw new Error("Account ID is required to fetch transactions");
+    let url = '/transactions';
+    
+    if (accountId && accountId !== 'all') {
+      url += `?accountId=${accountId}`;
+      console.log(`Fetching transactions for account ID: ${accountId}`);
+    } else {
+      console.log('Fetching all transactions for user');
     }
-    console.log(`Fetching transactions for account ID: ${accountId}`);
-    const response = await api.get(`/transactions?accountId=${accountId}`);
+    
+    const response = await api.get(url);
     console.log('Transaction API response:', response);
     console.log('Transaction data:', response.data);
-    return response.data;
+    
+    // Handle different response structures
+    if (response.data && Array.isArray(response.data)) {
+      return response.data;
+    } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+      return response.data.data;
+    } else {
+      return [];
+    }
   } catch (error) {
     console.error("Error fetching transactions:", error);
     console.error("Error response:", error.response);

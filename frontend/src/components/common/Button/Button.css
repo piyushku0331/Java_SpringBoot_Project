@@ -10,9 +10,13 @@
   font-weight: 500;
   text-decoration: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   min-height: 44px;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  perspective: 500px;
 }
 
 .btn:disabled {
@@ -27,8 +31,8 @@
 
 .btn-primary:hover:not(:disabled) {
   background-color: #0056b3;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  transform: translateY(-3px) rotateX(5deg) rotateY(2deg) translateZ(10px);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
 }
 
 .btn-secondary {
@@ -38,8 +42,8 @@
 
 .btn-secondary:hover:not(:disabled) {
   background-color: #545b62;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+  transform: translateY(-3px) rotateX(5deg) rotateY(2deg) translateZ(10px);
+  box-shadow: 0 8px 20px rgba(108, 117, 125, 0.4);
 }
 
 .btn-success {
@@ -49,8 +53,8 @@
 
 .btn-success:hover:not(:disabled) {
   background-color: #1e7e34;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+  transform: translateY(-3px) rotateX(5deg) rotateY(2deg) translateZ(10px);
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
 }
 
 .btn-danger {
@@ -60,8 +64,8 @@
 
 .btn-danger:hover:not(:disabled) {
   background-color: #bd2130;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+  transform: translateY(-3px) rotateX(5deg) rotateY(2deg) translateZ(10px);
+  box-shadow: 0 8px 20px rgba(220, 53, 69, 0.4);
 }
 
 .btn-outline {
@@ -73,7 +77,8 @@
 .btn-outline:hover:not(:disabled) {
   background-color: #007bff;
   color: white;
-  transform: translateY(-1px);
+  transform: translateY(-3px) rotateX(5deg) rotateY(2deg) translateZ(10px);
+  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
 }
 
 .btn-sm {
@@ -118,6 +123,109 @@
   100% { transform: rotate(360deg); }
 }
 
+/* Advanced 3D Button Effects */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+  z-index: 1;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+  z-index: 0;
+}
+
+.btn:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* 3D Press Effect */
+.btn:active {
+  transform: translateY(-1px) rotateX(2deg) rotateY(1deg) translateZ(5px);
+  transition: all 0.1s ease;
+}
+
+/* Magnetic Button Effect */
+.btn-magnetic {
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.btn-magnetic:hover {
+  transform: translateY(-5px) rotateX(8deg) rotateY(4deg) translateZ(15px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Glow Button Effect */
+.btn-glow {
+  position: relative;
+  overflow: visible;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #007bff, #28a745, #dc3545, #ffc107);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: rotate 2s linear infinite;
+}
+
+.btn-glow:hover::before {
+  opacity: 1;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Floating Button Effect */
+.btn-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotateX(0deg); }
+  50% { transform: translateY(-10px) rotateX(5deg); }
+}
+
+/* Pulse Button Effect */
+.btn-pulse {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+}
+
 @media (max-width: 768px) {
   .btn {
     padding: 10px 20px;
@@ -135,5 +243,9 @@
     padding: 14px 28px;
     font-size: 17px;
     min-height: 48px;
+  }
+  
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px) rotateX(3deg) rotateY(1deg) translateZ(5px);
   }
 }
