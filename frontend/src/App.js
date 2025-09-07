@@ -6,8 +6,8 @@ import { AuthProvider } from "./context/AuthContext";
 import SEO from "./components/common/SEO";
 // CSS imports in correct order - global first, then specific styles
 import './styles/global.css';
-import './styles/animations.css';
 import './styles/page-transitions.css';
+import './styles/animations.css';
 
 
 function AppContent() {

@@ -7,16 +7,8 @@ export default function Home() {
 
     return (
         <div className="home-container page-container">
-            {/* Hero Section with 3D Parallax */}
+            {/* Hero Section with Three Boxes */}
             <section className="hero-section">
-                <div className="hero-background">
-                    <div className="floating-shapes">
-                        <div className="shape shape-1"></div>
-                        <div className="shape shape-2"></div>
-                        <div className="shape shape-3"></div>
-                    </div>
-                </div>
-
                 <div className="hero-content stagger-children">
                     <div className="hero-badge">
                         <FaStar className="star-icon" />
@@ -31,31 +23,39 @@ export default function Home() {
 
                     <p className="hero-subtitle">
                         Your trusted partner for modern Indian banking. Experience seamless digital banking
-                        with UPI, IMPS, NEFT, and RTGS transfers. Manage your savings, current accounts,
-                        and investments with world-class security.
+                        with UPI, IMPS, NEFT, and RTGS transfers.
                     </p>
 
-                    <div className="hero-stats stagger-children">
-                        <div className="stat-item hover-lift">
-                            <div className="stat-number">₹50K+</div>
-                            <div className="stat-label">UPI Daily Limit</div>
+                    <div className="hero-boxes">
+                        <div className="hero-box">
+                            <div className="box-content">
+                                <FaShieldAlt className="box-icon" />
+                                <h3 className="box-title">Secure Banking</h3>
+                                <p className="box-description">RBI compliant security with advanced encryption</p>
+                            </div>
                         </div>
-                        <div className="stat-item hover-lift">
-                            <div className="stat-number">₹2L</div>
-                            <div className="stat-label">IMPS Limit</div>
+                        <div className="hero-box">
+                            <div className="box-content">
+                                <FaChartLine className="box-icon" />
+                                <h3 className="box-title">UPI Payments</h3>
+                                <p className="box-description">Instant transfers with UPI, IMPS, NEFT & RTGS</p>
+                            </div>
                         </div>
-                        <div className="stat-item hover-lift">
-                            <div className="stat-number">24/7</div>
-                            <div className="stat-label">Banking</div>
+                        <div className="hero-box">
+                            <div className="box-content">
+                                <FaMobileAlt className="box-icon" />
+                                <h3 className="box-title">Mobile Banking</h3>
+                                <p className="box-description">Complete banking solutions on your mobile</p>
+                            </div>
                         </div>
                     </div>
 
                     <div className="hero-actions">
-                        <Link to="/login" className="cta-button primary-button hover-lift transition-base hover-underline">
+                        <Link to="/login" className="cta-button primary-button hover-lift transition-base">
                             <FaRocket className="button-icon" />
                             Get Started
                         </Link>
-                        <Link to="/register" className="cta-button secondary-button hover-lift transition-base hover-underline">
+                        <Link to="/register" className="cta-button secondary-button hover-lift transition-base">
                             <FaGem className="button-icon" />
                             Create Account
                         </Link>
@@ -71,7 +71,7 @@ export default function Home() {
                 </div>
 
                 <div className="features-grid stagger-children">
-                    <div className="feature-card hover-lift">
+                    <div className="feature-card hover-lift-3d">
                         <div className="feature-icon-wrapper">
                             <div className="feature-icon-bg"></div>
                             <FaShieldAlt className="feature-icon" />
@@ -86,7 +86,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="feature-card hover-lift">
+                    <div className="feature-card hover-lift-3d">
                         <div className="feature-icon-wrapper">
                             <div className="feature-icon-bg"></div>
                             <FaChartLine className="feature-icon" />
@@ -101,7 +101,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    <div className="feature-card hover-lift">
+                    <div className="feature-card hover-lift-3d">
                         <div className="feature-icon-wrapper">
                             <div className="feature-icon-bg"></div>
                             <FaMobileAlt className="feature-icon" />

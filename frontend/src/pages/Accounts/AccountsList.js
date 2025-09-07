@@ -59,18 +59,19 @@ const AccountsList = () => {
     <div className="accounts-container page-container">
       <div className="accounts-header">
         <h1>Your Accounts</h1>
-        <Button type="primary">
-          <Link to="/accounts/new" className="new-account-link">Open New Account</Link>
-        </Button>
+        <Link to="/accounts/new">
+          <Button type="primary">Open New Account</Button>
+        </Link>
       </div>
+
 
       {accounts.length === 0 ? (
         <Card>
           <div className="no-accounts">
             <p>You don't have any accounts yet.</p>
-            <Button type="primary">
-              <Link to="/accounts/new">Open Your First Account</Link>
-            </Button>
+            <Link to="/accounts/new">
+              <Button type="primary">Open Your First Account</Button>
+            </Link>
           </div>
         </Card>
       ) : (

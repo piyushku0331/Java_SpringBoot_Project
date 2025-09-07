@@ -34,13 +34,30 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const response = await loginUser(credentials);
-      const { user: userData, token } = response.data;
+      
+      // Handle different response structures
+      let loggedInUser, token;
+      if (response.data) {
+        loggedInUser = response.data.user || response.data;
+        token = response.data.token;
+      } else {
+        loggedInUser = response.user || response;
+        token = response.token;
+      }
 
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('token', token);
+      console.log('Login - User:', loggedInUser);
+      console.log('Login - Token:', token);
 
-      return { success: true };
+      if (loggedInUser) {
+        setUser(loggedInUser);
+        localStorage.setItem('user', JSON.stringify(loggedInUser));
+      }
+      
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+
+      return { success: true, user: loggedInUser, token };
     } catch (error) {
       console.error('Login error:', error);
       return {
@@ -58,15 +75,30 @@ export const AuthProvider = ({ children }) => {
       console.log('Registration attempt with data:', userData);
       const response = await registerUser(userData);
       console.log('Registration API response:', response);
-      const { user: newUser, token } = response.data;
+      
+      // Handle different response structures
+      let newUser, token;
+      if (response.data) {
+        newUser = response.data.user || response.data;
+        token = response.data.token;
+      } else {
+        newUser = response.user || response;
+        token = response.token;
+      }
+      
       console.log('Parsed user from response:', newUser);
       console.log('Token from response:', token);
 
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      localStorage.setItem('token', token);
+      if (newUser) {
+        setUser(newUser);
+        localStorage.setItem('user', JSON.stringify(newUser));
+      }
+      
+      if (token) {
+        localStorage.setItem('token', token);
+      }
 
-      return { success: true };
+      return { success: true, user: newUser, token };
     } catch (error) {
       console.error('Registration error:', error);
       console.error('Error response:', error.response);

@@ -13,6 +13,10 @@ api.interceptors.request.use(
       // Use admin token for admin endpoints
       token = localStorage.getItem('adminToken');
       console.log('API Request - Using admin token for admin endpoint');
+    } else if (config.url?.includes('/auth/')) {
+      // No token needed for auth endpoints (login, register)
+      console.log('API Request - Auth endpoint, no token required');
+      return config;
     } else {
       // Use user token for customer endpoints
       token = localStorage.getItem('token');

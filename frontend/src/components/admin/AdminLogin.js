@@ -25,13 +25,21 @@ const AdminLogin = () => {
     setError('');
 
     try {
+      console.log('AdminLogin: Attempting login with:', formData.email);
       const response = await loginAdmin(formData);
+      console.log('AdminLogin: Login response:', response);
       
       if (response.token) {
+        console.log('AdminLogin: Token received, navigating to dashboard');
         // Redirect to admin dashboard
         navigate('/admin/dashboard');
+      } else {
+        console.error('AdminLogin: No token in response');
+        setError('Login failed - no authentication token received');
       }
     } catch (error) {
+      console.error('AdminLogin: Login error:', error);
+      console.error('AdminLogin: Error response:', error.response);
       setError(error.response?.data?.error || 'Login failed. Please try again.');
     } finally {
       setLoading(false);

@@ -3,11 +3,26 @@
  */
 
 /**
- * Format a number as currency (INR)
+ * Format a number as currency (INR) with compact notation for large amounts
  * @param {number} amount - The amount to format
+ * @param {boolean} compact - Whether to use compact notation for large amounts
  * @returns {string} Formatted currency string
  */
-export const formatCurrency = (amount) => {
+export const formatCurrency = (amount, compact = false) => {
+  if (amount === null || amount === undefined || isNaN(amount)) {
+    return '₹0.00';
+  }
+
+  // For very large amounts or when compact is requested, use compact notation
+  if (compact || Math.abs(amount) >= 10000000) { // 1 crore or more
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      notation: 'compact',
+      maximumFractionDigits: 2
+    }).format(amount);
+  }
+
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',

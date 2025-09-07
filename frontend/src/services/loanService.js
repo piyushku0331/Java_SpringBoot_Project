@@ -7,15 +7,40 @@ export const getCustomerLoans = async (userId) => {
   if (!userId) {
     throw new Error("User ID is required to fetch loans.");
   }
-  try {
-    console.log("loanService: Fetching loans for userId:", userId);
-    const response = await api.get(`/customer/loans?userId=${userId}`);
-    console.log("loanService: Received loans:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("loanService: Error fetching customer loans:", error);
-    console.error("loanService: Error response:", error.response);
-    throw error;
+  
+  console.log("=== loanService: Starting loan fetch ===");
+  console.log("loanService: userId:", userId);
+  console.log("loanService: token available:", !!localStorage.getItem('token'));
+  
+  const endpoints = [
+    `/customer/loans/${userId}`,
+    `/customer/loans?userId=${userId}`,
+    `/customer/${userId}/loans`,
+    `/loans/customer/${userId}`,
+    `/loans`
+  ];
+  
+  for (let i = 0; i < endpoints.length; i++) {
+    const endpoint = endpoints[i];
+    try {
+      console.log(`loanService: Trying endpoint ${i + 1}/${endpoints.length}: ${endpoint}`);
+      const response = await api.get(endpoint);
+      console.log(`loanService: SUCCESS on endpoint ${endpoint}:`, response.data);
+      console.log(`loanService: Response status:`, response.status);
+      console.log(`loanService: Response headers:`, response.headers);
+      return response.data;
+    } catch (error) {
+      console.log(`loanService: FAILED on endpoint ${endpoint}:`, error.response?.status, error.message);
+      if (error.response) {
+        console.log(`loanService: Error details:`, error.response.data);
+      }
+      
+      // Continue to next endpoint unless it's the last one
+      if (i === endpoints.length - 1) {
+        console.error("loanService: All endpoints failed, returning empty array");
+        return [];
+      }
+    }
   }
 };
 

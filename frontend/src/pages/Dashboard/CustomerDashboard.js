@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Card from '../../components/common/Card/Card';
 import Button from '../../components/common/Button/Button';
 import './CustomerDashboard.css';
 import { getCustomerAccounts } from '../../services/customerService';
 import { getTransactions } from '../../services/transactionService';
 import { formatCurrency, formatDate } from '../../utils/formatters';
-import { FaCreditCard, FaExchangeAlt, FaChartLine, FaUser, FaCog, FaSignOutAlt, FaCheckCircle, FaUniversity, FaPiggyBank, FaCreditCard as FaCreditCardAlt } from 'react-icons/fa';
+import { FaCreditCard, FaExchangeAlt, FaChartLine, FaCog, FaSignOutAlt, FaCheckCircle, FaUniversity, FaPiggyBank, FaCreditCard as FaCreditCardAlt } from 'react-icons/fa';
 import { useAuth } from '../../context/AuthContext';
 
 export default function CustomerDashboard() {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [accounts, setAccounts] = useState([]);
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,15 +27,29 @@ export default function CustomerDashboard() {
       console.log('Fetching accounts for user:', user?.id);
       const accountsData = await getCustomerAccounts(user?.id);
       console.log('Accounts received:', accountsData);
-      setAccounts(accountsData);
+      console.log('Accounts array length:', accountsData?.length);
+      console.log('Accounts data type:', typeof accountsData);
+      console.log('Is accounts array?', Array.isArray(accountsData));
+      
+      // Ensure we have a valid array
+      const validAccounts = Array.isArray(accountsData) ? accountsData : [];
+      console.log('Valid accounts to set:', validAccounts);
+      setAccounts(validAccounts);
 
       // Fetch recent transactions (last 5) - get from first account if available
-      if (accountsData.length > 0) {
-        console.log('Fetching transactions for account:', accountsData[0].id);
+      if (validAccounts.length > 0) {
+        console.log('Fetching transactions for account:', validAccounts[0].id);
         try {
-          const transactionsData = await getTransactions(accountsData[0].id);
+          const transactionsData = await getTransactions(validAccounts[0].id);
           console.log('Transactions received:', transactionsData);
-          setRecentTransactions(transactionsData.slice(0, 5));
+          console.log('Transactions array length:', transactionsData?.length);
+          console.log('Transactions data type:', typeof transactionsData);
+          console.log('Is transactions array?', Array.isArray(transactionsData));
+          
+          // Ensure we have a valid array
+          const validTransactions = Array.isArray(transactionsData) ? transactionsData : [];
+          console.log('Valid transactions to set:', validTransactions);
+          setRecentTransactions(validTransactions.slice(0, 5));
         } catch (transactionError) {
           console.error('Failed to fetch transactions:', transactionError);
           setRecentTransactions([]);
@@ -76,10 +91,18 @@ export default function CustomerDashboard() {
   }, [fetchDashboardData, location.state]);
 
   useEffect(() => {
+    console.log('Dashboard useEffect triggered');
+    console.log('User object:', user);
+    console.log('User ID:', user?.id);
+    console.log('User authenticated:', !!user);
+    
     if (user?.id) {
+      console.log('User ID found, fetching dashboard data...');
       fetchDashboardData();
+    } else {
+      console.log('No user ID found, skipping data fetch');
     }
-  }, [user?.id, fetchDashboardData]);
+  }, [user, fetchDashboardData]);
 
   const getTotalBalance = () => {
     return accounts.reduce((total, account) => total + (account.balance || 0), 0);
@@ -206,7 +229,7 @@ export default function CustomerDashboard() {
             <div className="stat-icon">💰</div>
             <div className="stat-details">
               <h3>Total Balance</h3>
-              <p className="stat-value">{formatCurrency(getTotalBalance())}</p>
+              <p className="stat-value">{formatCurrency(getTotalBalance(), true)}</p>
             </div>
           </div>
         </Card>
@@ -227,9 +250,9 @@ export default function CustomerDashboard() {
             <div className="stat-details">
               <h3>This Month</h3>
               <p className="stat-value">
-                {recentTransactions.length > 0 ? 
-                  `${recentTransactions.length} transactions` : 
-                  'No transactions'
+                {recentTransactions.length > 0 
+                  ? `${recentTransactions.length} transactions` 
+                  : 'No transactions'
                 }
               </p>
             </div>
@@ -241,45 +264,36 @@ export default function CustomerDashboard() {
       <div className="quick-actions">
         <h2>Quick Actions</h2>
         <div className="actions-grid">
-          <Link to="/accounts" className="action-card">
+          <div className="action-card" onClick={() => navigate('/accounts/new')}>
             <Card className="action-item">
               <div className="action-icon">
                 <FaCreditCard />
               </div>
-              <h3>View Accounts</h3>
-              <p>Check balances and account details</p>
+              <h3>Open New Account</h3>
+              <p>Create a new bank account</p>
             </Card>
-          </Link>
+          </div>
 
-          <Link to="/transactions" className="action-card">
+          <div className="action-card" onClick={() => navigate('/transactions/create')}>
             <Card className="action-item">
               <div className="action-icon">
                 <FaExchangeAlt />
               </div>
-              <h3>Transactions</h3>
-              <p>View transaction history and details</p>
+              <h3>New Transaction</h3>
+              <p>Transfer money or make payments</p>
             </Card>
-          </Link>
+          </div>
 
-          <Link to="/loans" className="action-card">
+          <div className="action-card" onClick={() => navigate('/loans/apply')}>
             <Card className="action-item">
               <div className="action-icon">
                 <FaChartLine />
               </div>
-              <h3>Loans</h3>
-              <p>Apply for loans and view applications</p>
+              <h3>Apply for Loan</h3>
+              <p>Submit a new loan application</p>
             </Card>
-          </Link>
+          </div>
 
-          <Link to="/profile" className="action-card">
-            <Card className="action-item">
-              <div className="action-icon">
-                <FaUser />
-              </div>
-              <h3>Profile</h3>
-              <p>Update personal information</p>
-            </Card>
-          </Link>
         </div>
       </div>
 
@@ -335,7 +349,7 @@ export default function CustomerDashboard() {
           </Link>
         </div>
         
-        {accounts.length > 0 ? (
+        {accounts && accounts.length > 0 ? (
           <div className="accounts-grid">
             {accounts.map((account) => (
               <Card key={account.id} className="account-summary-card">
@@ -344,13 +358,13 @@ export default function CustomerDashboard() {
                     {getAccountTypeIcon(account.accountType)}
                   </div>
                   <div className="account-info">
-                    <h3>{account.accountType}</h3>
-                    <p className="account-number">****{account.accountNumber?.slice(-4)}</p>
+                    <h3>{account.accountType || 'Unknown Account'}</h3>
+                    <p className="account-number">****{account.accountNumber?.slice(-4) || '0000'}</p>
                   </div>
                 </div>
                 <div className="account-balance">
                   <p className="balance-label">Available Balance</p>
-                  <p className="balance-amount">{formatCurrency(account.balance)}</p>
+                  <p className="balance-amount">{formatCurrency(account.balance || 0)}</p>
                 </div>
                 <div className="account-actions">
                   <Link to={`/accounts/${account.id}`}>
@@ -367,9 +381,9 @@ export default function CustomerDashboard() {
           <Card>
             <div className="no-accounts">
               <p>You don't have any accounts yet.</p>
-              <Button type="primary">
-                <Link to="/accounts">View Accounts</Link>
-              </Button>
+              <Link to="/accounts/new">
+                <Button type="primary">Open New Account</Button>
+              </Link>
             </div>
           </Card>
         )}

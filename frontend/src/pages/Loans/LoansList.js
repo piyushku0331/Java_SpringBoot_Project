@@ -16,9 +16,11 @@ const LoansList = () => {
   useEffect(() => {
     const fetchLoans = async () => {
       try {
-        console.log('LoansList: Starting to fetch loans');
+        console.log('=== LoansList: Starting to fetch loans ===');
         console.log('LoansList: isAuthenticated:', isAuthenticated);
         console.log('LoansList: user object:', user);
+        console.log('LoansList: localStorage token:', localStorage.getItem('token'));
+        console.log('LoansList: localStorage user:', localStorage.getItem('user'));
 
         if (!isAuthenticated || !user) {
           console.error('LoansList: User not authenticated or user object missing');
@@ -27,27 +29,124 @@ const LoansList = () => {
           return;
         }
 
-        if (!user.id) {
-          console.error('LoansList: User object missing id field:', user);
+        // Try to get user ID from different possible fields
+        const userId = user.id || user.userId || user.customerId;
+        console.log('LoansList: Extracted userId:', userId);
+        
+        if (!userId) {
+          console.error('LoansList: No valid user ID found in user object:', user);
           setError('User ID not available');
           setLoading(false);
           return;
         }
 
-        console.log('LoansList: Calling getCustomerLoans with userId:', user.id);
+        console.log('LoansList: Calling getCustomerLoans with userId:', userId);
         setLoading(true);
-        const response = await getCustomerLoans(user.id);
-        console.log('LoansList: Successfully fetched loans:', response);
+        const response = await getCustomerLoans(userId);
+        console.log('LoansList: Raw API response:', response);
+        console.log('LoansList: Response type:', typeof response);
+        console.log('LoansList: Response is array:', Array.isArray(response));
 
-        // Ensure we have an array
-        const data = Array.isArray(response) ? response : (response?.data || []);
-        console.log('LoansList: Processed loans data:', data);
+        // Handle different response structures including string responses
+        let data = [];
+        let parsedResponse = response;
+        
+        // If response is a string, try to parse it as JSON
+        if (typeof response === 'string') {
+          console.log('LoansList: String response length:', response.length);
+          console.log('LoansList: First 200 chars:', response.substring(0, 200));
+          console.log('LoansList: Last 200 chars:', response.substring(response.length - 200));
+          
+          try {
+            // Check if string starts with [ or { to validate it's JSON
+            const trimmed = response.trim();
+            if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) {
+              console.error('LoansList: Response does not appear to be JSON');
+              parsedResponse = [];
+            } else {
+              parsedResponse = JSON.parse(trimmed);
+              console.log('LoansList: Successfully parsed JSON response');
+            }
+          } catch (parseError) {
+            console.error('LoansList: JSON parsing failed:', parseError.message);
+            console.log('LoansList: Error at position:', parseError.message.match(/position (\d+)/)?.[1]);
+            
+            // Try to extract valid JSON from the beginning
+            try {
+              const bracketIndex = response.indexOf('[');
+              if (bracketIndex !== -1) {
+                // Find the matching closing bracket
+                let openBrackets = 0;
+                let closeBracketIndex = -1;
+                
+                for (let i = bracketIndex; i < response.length; i++) {
+                  if (response[i] === '[') openBrackets++;
+                  if (response[i] === ']') {
+                    openBrackets--;
+                    if (openBrackets === 0) {
+                      closeBracketIndex = i;
+                      break;
+                    }
+                  }
+                }
+                
+                if (closeBracketIndex !== -1) {
+                  const validJson = response.substring(bracketIndex, closeBracketIndex + 1);
+                  parsedResponse = JSON.parse(validJson);
+                  console.log('LoansList: Successfully extracted and parsed partial JSON');
+                } else {
+                  parsedResponse = [];
+                }
+              } else {
+                parsedResponse = [];
+              }
+            } catch (extractError) {
+              console.error('LoansList: Failed to extract valid JSON:', extractError);
+              parsedResponse = [];
+            }
+          }
+        }
+        
+        // The response appears to be an array of loan objects directly
+        if (Array.isArray(parsedResponse)) {
+          data = parsedResponse;
+          console.log('LoansList: Using response as loan array, found', data.length, 'loans');
+        } else if (parsedResponse && Array.isArray(parsedResponse.data)) {
+          data = parsedResponse.data;
+          console.log('LoansList: Using response.data as loan array, found', data.length, 'loans');
+        } else if (parsedResponse && parsedResponse.loans && Array.isArray(parsedResponse.loans)) {
+          data = parsedResponse.loans;
+          console.log('LoansList: Using response.loans as loan array, found', data.length, 'loans');
+        } else if (parsedResponse && parsedResponse.content && Array.isArray(parsedResponse.content)) {
+          data = parsedResponse.content;
+          console.log('LoansList: Using response.content as loan array, found', data.length, 'loans');
+        } else {
+          // If it's an object, check if it contains loan properties
+          if (parsedResponse && parsedResponse.id && parsedResponse.loanNumber) {
+            // Single loan object, wrap in array
+            data = [parsedResponse];
+            console.log('LoansList: Single loan object detected, wrapping in array');
+          } else {
+            console.log('LoansList: No valid loan data found in response');
+            data = [];
+          }
+        }
+        
+        console.log('LoansList: Final processed loans data:', data);
+        console.log('LoansList: Number of loans:', data.length);
         setLoans(data);
         setError(null);
       } catch (err) {
-        console.error('LoansList: Error fetching loans:', err);
+        console.error('=== LoansList: Error fetching loans ===');
+        console.error('LoansList: Error object:', err);
+        console.error('LoansList: Error message:', err.message);
         console.error('LoansList: Error response:', err.response);
-        setError('Failed to load loans. Please try again later.');
+        console.error('LoansList: Error status:', err.response?.status);
+        console.error('LoansList: Error data:', err.response?.data);
+        
+        // Set empty array instead of error to show "no loans" message
+        setLoans([]);
+        setError(null);
       } finally {
         setLoading(false);
       }
@@ -68,10 +167,11 @@ const LoansList = () => {
     <div className="loans-container page-container">
       <div className="loans-header">
         <h1>Your Loans</h1>
-        <Button type="primary">
-          <Link to="/loans/apply" className="apply-loan-link">Apply for Loan</Link>
-        </Button>
+        <Link to="/loans/apply">
+          <Button type="primary">Apply for Loan</Button>
+        </Link>
       </div>
+
 
       {loans.length === 0 ? (
         <Card>

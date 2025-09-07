@@ -86,6 +86,37 @@ html, body {
   --depth-shallow: 10px;
   --depth-medium: 20px;
   --depth-deep: 40px;
+  
+  /* Animation Variables */
+  --animation-duration-fast: 0.3s;
+  --animation-duration-medium: 0.5s;
+  --animation-duration-slow: 0.8s;
+  --animation-timing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-timing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --animation-timing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  
+  /* Color Variables for Components */
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8b8;
+  --text-muted: #6c757d;
+  
+  /* Border Radius Variables */
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+  --border-radius-xl: 24px;
+  
+  /* Shadow Variables */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+  
+  /* Transition Variables */
+  --transition-fast: 0.15s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.5s ease;
 }
 
 /* Global Styles with 3D Enhancement */
@@ -638,6 +669,146 @@ body::before {
   }
 }
 
+/* Additional Keyframe Animations for Components */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes expandWidth {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes staggeredFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatAnimation {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes numberPulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes pulseGreen {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(21, 87, 36, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(21, 87, 36, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulseRed {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulseBlue {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(12, 84, 96, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(12, 84, 96, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes pulseYellow {
+  0%, 100% {
+    box-shadow: 0 2px 8px rgba(133, 100, 4, 0.2);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(133, 100, 4, 0.4);
+    transform: scale(1.02);
+  }
+}
+
+@keyframes numberPulseGreen {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.03);
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes numberPulseRed {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.03);
+    filter: brightness(1.2);
+  }
+}
+
 /* Interactive Elements */
 .interactive {
   cursor: pointer;
@@ -760,6 +931,102 @@ body::before {
   }
 }
 
+/* Utility Classes for Content Visibility */
+.page-container {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  font-size: 1.2rem;
+  color: var(--text-primary);
+  background: var(--glass-bg);
+  border-radius: var(--border-radius-md);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  margin: 20px 0;
+}
+
+.error-message {
+  background: rgba(245, 87, 108, 0.1);
+  color: #f5576c;
+  border: 1px solid rgba(245, 87, 108, 0.3);
+  padding: 16px;
+  border-radius: var(--border-radius-md);
+  margin: 20px 0;
+  backdrop-filter: blur(10px);
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Force visibility for critical content */
+.transactions-container,
+.loans-container,
+.accounts-container {
+  opacity: 1 !important;
+  transform: none !important;
+  padding-top: 100px !important; /* Account for fixed navbar */
+  min-height: 100vh;
+}
+
+.transactions-header,
+.loans-header,
+.accounts-header {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Fix z-index issues */
+.glass-navbar {
+  z-index: 1000 !important;
+}
+
+.quick-actions {
+  z-index: 10 !important;
+  position: relative;
+}
+
+.dashboard-stats {
+  z-index: 10 !important;
+  position: relative;
+}
+
+/* Debug styles for data visibility */
+.transactions-table,
+.loans-list,
+.accounts-list {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.transaction-row,
+.loan-card,
+.account-card {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+/* Ensure tables are visible */
+.table-responsive {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+.transactions-table table {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
+}
+
+
 /* Enhanced Accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -785,6 +1052,18 @@ body::before {
   .slide-up,
   .bounce-in,
   .rotate-in {
+    animation: none !important;
+  }
+  
+  /* Ensure content is visible even with reduced motion */
+  .transactions-container,
+  .loans-container,
+  .accounts-container,
+  .transactions-header,
+  .loans-header,
+  .accounts-header {
+    opacity: 1 !important;
+    transform: none !important;
     animation: none !important;
   }
 }

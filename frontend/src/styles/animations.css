@@ -1,12 +1,9 @@
 /* Comprehensive Animation Library */
 
-/* Import the enhanced global styles */
-@import './global.css';
-
 /* Advanced 3D Animation Utilities */
 .animate-3d {
-  transform-style: preserve-3d;
-  perspective: 1000px;
+  transform-style: preserve-3d !important;
+  perspective: 1000px !important;
 }
 
 .animate-3d-close {
@@ -21,8 +18,8 @@
 }
 
 .hover-lift-3d:hover {
-  transform: translateY(-8px) rotateX(5deg) rotateY(3deg) translateZ(20px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  transform: translateY(-8px) rotateX(5deg) rotateY(3deg) translateZ(20px) !important;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2) !important;
 }
 
 .hover-scale-3d {
@@ -31,7 +28,7 @@
 }
 
 .hover-scale-3d:hover {
-  transform: scale(1.05) rotateX(2deg) rotateY(2deg) translateZ(10px);
+  transform: scale(1.05) rotateX(2deg) rotateY(2deg) translateZ(10px) !important;
 }
 
 .hover-rotate-3d {

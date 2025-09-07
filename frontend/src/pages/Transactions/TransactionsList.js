@@ -33,9 +33,22 @@ const TransactionsList = () => {
         console.log('TransactionsList: Fetching accounts for userId:', userId);
         const response = await getUserAccounts(userId);
         console.log('TransactionsList: Accounts response:', response);
-        setAccounts(response.data || []);
+        
+        // Handle the response properly - check if it's wrapped in data property
+        let accountsData = [];
+        if (Array.isArray(response)) {
+          accountsData = response;
+        } else if (response && Array.isArray(response.data)) {
+          accountsData = response.data;
+        } else if (response && response.accounts && Array.isArray(response.accounts)) {
+          accountsData = response.accounts;
+        }
+        
+        console.log('TransactionsList: Processed accounts data:', accountsData);
+        setAccounts(accountsData);
       } catch (err) {
         console.error('Error fetching accounts:', err);
+        setAccounts([]); // Set empty array on error
         // If still failing, try with a different approach
         if (err.response?.status === 400) {
           console.log('TransactionsList: Trying alternative approach...');
@@ -44,7 +57,9 @@ const TransactionsList = () => {
       }
     };
 
-    fetchAccounts();
+    if (user?.id) {
+      fetchAccounts();
+    }
   }, [user]);
 
   useEffect(() => {
@@ -89,10 +104,11 @@ const TransactionsList = () => {
     <div className="transactions-container page-container">
       <div className="transactions-header">
         <h1>Transactions</h1>
-        <Button type="primary">
-          <Link to="/transactions/create" className="new-transaction-link">New Transaction</Link>
-        </Button>
+        <Link to="/transactions/create">
+          <Button type="primary">New Transaction</Button>
+        </Link>
       </div>
+
 
       <Card className="filter-card">
         <div className="filter-controls">
@@ -105,11 +121,13 @@ const TransactionsList = () => {
               className="account-select"
             >
               <option value="all">All Accounts</option>
-              {accounts.map(account => (
+              {accounts && accounts.length > 0 ? accounts.map(account => (
                 <option key={account.id} value={account.id}>
                   {account.accountType} - {account.accountNumber}
                 </option>
-              ))}
+              )) : (
+                <option value="" disabled>No accounts available</option>
+              )}
             </select>
           </div>
         </div>
@@ -143,18 +161,21 @@ const TransactionsList = () => {
                   <tr key={transaction.id}>
                     <td>{formatDate(transaction.transactionDate)}</td>
                     <td>{transaction.description}</td>
-                    <td>{transaction.account?.accountNumber || 'N/A'}</td>
+                    <td>{accounts.length > 0 ? accounts[0].accountNumber : 'N/A'}</td>
                     <td className={`transaction-type-${transaction.type?.toLowerCase() || ''}`}>
                       {transaction.type}
                     </td>
                     <td className={transaction.amount < 0 ? 'amount-negative' : 'amount-positive'}>
                       {formatCurrency(Math.abs(transaction.amount))}
                     </td>
-                    <td>{formatCurrency(transaction.account?.balance || 0)}</td>
+                    <td>{accounts.length > 0 ? formatCurrency(accounts[0].balance) : 'N/A'}</td>
                     <td>
-                      <Link to={`/transactions/${transaction.id}`}>
-                        <Button type="secondary" size="small">Details</Button>
-                      </Link>
+                      <button 
+                        className="details-button"
+                        onClick={() => window.location.href = `/transactions/${transaction.id}`}
+                      >
+                        Details
+                      </button>
                     </td>
                   </tr>
                 ))}
