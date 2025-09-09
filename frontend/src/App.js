@@ -11,7 +11,7 @@ import './styles/animations.css';
 
 function AppContent() {
   return (
-    <>
+    <div className="app-container">
       <SEO
         title="NextGen Bank — Secure Digital Banking"
         description="Manage accounts, loans, and transactions with a secure, modern experience."
@@ -38,7 +38,7 @@ function AppContent() {
       <Navbar />
       <AppRoutes />
       <Footer />
-    </>
+    </div>
   );
 }
 

@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import Card from '../../components/common/Card/Card';
 import Button from '../../components/common/Button/Button';
 import './Transactions.css';
+import '../../styles/global.css';
 import { getTransactions } from '../../services/transactionService';
 import { getUserAccounts } from '../../services/accountService';
 import { useAuth } from '../../context/AuthContext';
@@ -95,14 +96,15 @@ const TransactionsList = () => {
   }
 
   return (
-    <div className="transactions-container page-container">
-      <div className="transactions-header">
-        <h1>Transactions</h1>
-        <Link to="/transactions/create">
-          <Button type="primary">New Transaction</Button>
-        </Link>
+    <div className="transactions-container animate-fadeIn">
+      <div className="transactions-header animate-slideInUp">
+        <h1>Transaction History</h1>
+        <div className="transactions-actions">
+          <Link to="/transactions/new">
+            <Button variant="primary" className="animate-slideInRight">New Transaction</Button>
+          </Link>
+        </div>
       </div>
-
 
       <Card className="filter-card">
         <div className="filter-controls">

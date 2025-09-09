@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './AdminDashboard.css';
+import '../../styles/global.css';
 import { getAdminDashboardStats } from '../../services/adminService';
 import { logoutAdmin } from '../../services/authService';
-import './AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -12,12 +13,23 @@ const AdminDashboard = () => {
 
   const fetchDashboardStats = useCallback(async () => {
     try {
+      console.log('AdminDashboard: Fetching dashboard stats...');
       const data = await getAdminDashboardStats();
+      console.log('AdminDashboard: Dashboard stats received:', data);
       setStats(data);
     } catch (error) {
-      if (error.response?.status === 403) {
+      console.error('AdminDashboard: Error fetching stats:', error);
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        console.log('AdminDashboard: Authentication error, redirecting to login');
         logoutAdmin();
         navigate('/admin/login');
+      } else {
+        console.error('AdminDashboard: API Error details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          message: error.message
+        });
       }
     } finally {
       setLoading(false);
@@ -115,45 +127,71 @@ const AdminDashboard = () => {
         <div className="admin-actions">
           <h2>Quick Actions</h2>
           <div className="action-buttons">
-            <button 
-              className="action-btn users-btn"
-              onClick={() => navigate('/admin/users')}
-            >
-              <span className="btn-icon">👤</span>
-              Manage Users
-            </button>
+            <div className="action-card">
+              <button 
+                className="action-btn users-btn"
+                onClick={() => navigate('/admin/users')}
+              >
+                <span className="btn-icon">👤</span>
+              </button>
+              <h3>User Management</h3>
+              <p>Manage user accounts, suspend/activate users</p>
+            </div>
             
-            <button 
-              className="action-btn accounts-btn"
-              onClick={() => navigate('/admin/accounts')}
-            >
-              <span className="btn-icon">🏦</span>
-              View Accounts
-            </button>
+            <div className="action-card">
+              <button 
+                className="action-btn accounts-btn"
+                onClick={() => navigate('/admin/accounts')}
+              >
+                <span className="btn-icon">🏦</span>
+              </button>
+              <h3>Account Management</h3>
+              <p>View and manage bank accounts</p>
+            </div>
             
-            <button 
-              className="action-btn loans-btn"
-              onClick={() => navigate('/admin/loans')}
-            >
-              <span className="btn-icon">💳</span>
-              Manage Loans
-            </button>
+            <div className="action-card">
+              <button 
+                className="action-btn loans-btn"
+                onClick={() => navigate('/admin/loan-approval')}
+              >
+                <span className="btn-icon">💳</span>
+              </button>
+              <h3>Loan Approval</h3>
+              <p>Review and approve/reject loan applications</p>
+            </div>
             
-            <button 
-              className="action-btn transactions-btn"
-              onClick={() => navigate('/admin/transactions')}
-            >
-              <span className="btn-icon">📈</span>
-              View Transactions
-            </button>
+            <div className="action-card">
+              <button 
+                className="action-btn transactions-btn"
+                onClick={() => navigate('/admin/transactions')}
+              >
+                <span className="btn-icon">📈</span>
+              </button>
+              <h3>Transaction Monitor</h3>
+              <p>Monitor all banking transactions</p>
+            </div>
             
-            <button 
-              className="action-btn admins-btn"
-              onClick={() => navigate('/admin/admins')}
-            >
-              <span className="btn-icon">⚙️</span>
-              Manage Admins
-            </button>
+            <div className="action-card">
+              <button 
+                className="action-btn terminate-btn"
+                onClick={() => navigate('/admin/account-termination')}
+              >
+                <span className="btn-icon">🚫</span>
+              </button>
+              <h3>Account Termination</h3>
+              <p>Terminate user accounts permanently</p>
+            </div>
+            
+            <div className="action-card">
+              <button 
+                className="action-btn admins-btn"
+                onClick={() => navigate('/admin/admins')}
+              >
+                <span className="btn-icon">⚙️</span>
+              </button>
+              <h3>Admin Management</h3>
+              <p>Manage admin users and permissions</p>
+            </div>
           </div>
         </div>
       </div>

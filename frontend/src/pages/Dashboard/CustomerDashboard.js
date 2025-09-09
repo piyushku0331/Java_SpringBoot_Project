@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Card from '../../components/common/Card/Card';
 import Button from '../../components/common/Button/Button';
 import './CustomerDashboard.css';
+import '../../styles/global.css';
 import { getCustomerAccounts } from '../../services/customerService';
 import { getTransactions } from '../../services/transactionService';
 import { formatCurrency, formatDate } from '../../utils/formatters';

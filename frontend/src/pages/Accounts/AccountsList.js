@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Card from '../../components/common/Card/Card';
 import Button from '../../components/common/Button/Button';
 import './Accounts.css';
+import '../../styles/global.css';
 import { getCustomerAccounts } from '../../services/customerService';
 import { formatCurrency } from '../../utils/formatters';
 import { useAuth } from '../../context/AuthContext';

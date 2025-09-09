@@ -1,9 +1,22 @@
-.dashboard-container {
-  padding: 120px 20px 20px;
+.customer-dashboard {
+  padding: 90px 20px 20px;
   max-width: 1200px;
   margin: 0 auto;
   min-height: 100vh;
-  background: var(--dark-gradient);
+  background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+  animation: fadeIn 0.8s ease-out;
+  color: #ffffff;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 
@@ -48,21 +61,41 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   padding: 24px;
   text-align: center;
-  transition: all var(--transition-medium);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   position: relative;
   overflow: hidden;
   min-width: 0;
   flex: 1;
   z-index: 1;
+  animation: cardSlideIn 0.6s ease-out both;
+  transform-style: preserve-3d;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+.stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes cardSlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) rotateX(-15deg) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+  }
 }
 
 
 
 
 .stat-card:hover {
-  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+  transform: translateY(-15px) rotateX(8deg) rotateY(4deg) scale(1.05);
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4), 0 8px 32px rgba(0, 0, 0, 0.2);
   z-index: 100;
   position: relative;
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 
@@ -80,6 +113,22 @@
   margin: 0 auto 16px;
   font-size: 1.5rem;
   position: relative;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: iconFloat 3s ease-in-out infinite;
+}
+
+@keyframes iconFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(5deg);
+  }
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.2) rotate(360deg);
+  animation-play-state: paused;
 }
 
 
@@ -169,15 +218,36 @@
   align-items: center;
   padding: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   margin-bottom: 8px;
+  animation: slideInLeft 0.6s ease-out both;
+  transform-style: preserve-3d;
+}
+
+.transaction-item:nth-child(1) { animation-delay: 0.1s; }
+.transaction-item:nth-child(2) { animation-delay: 0.2s; }
+.transaction-item:nth-child(3) { animation-delay: 0.3s; }
+.transaction-item:nth-child(4) { animation-delay: 0.4s; }
+.transaction-item:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes slideInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px) rotateY(-15deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) rotateY(0deg);
+  }
 }
 
 .transaction-item:hover {
   background: rgba(102, 126, 234, 0.15);
-  transform: translateX(5px);
+  transform: translateX(10px) translateY(-3px) rotateY(5deg) scale(1.02);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .transaction-item:last-child {
@@ -305,13 +375,34 @@
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: actionCardEntrance 0.6s ease-out both;
+  transform-style: preserve-3d;
+}
+
+.action-item:nth-child(1) { animation-delay: 0.2s; }
+.action-item:nth-child(2) { animation-delay: 0.3s; }
+.action-item:nth-child(3) { animation-delay: 0.4s; }
+.action-item:nth-child(4) { animation-delay: 0.5s; }
+
+@keyframes actionCardEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) rotateX(-20deg) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+  }
 }
 
 
 .action-card:hover .action-item {
-  box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+  transform: translateY(-12px) rotateX(8deg) rotateY(4deg) scale(1.05);
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4), 0 8px 32px rgba(0, 0, 0, 0.2);
   z-index: 100;
   position: relative;
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 

@@ -1,9 +1,11 @@
 .transactions-container {
-  padding: 120px 20px 20px;
+  padding: 90px 20px 20px;
   max-width: 1200px;
   margin: 0 auto;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+  color: #ffffff;
+  animation: fadeIn 0.8s ease-out;
 }
 
 .create-transaction-container {

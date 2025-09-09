@@ -3,10 +3,21 @@ import api from "./api";
 // Admin Dashboard
 export const getAdminDashboardStats = async () => {
   try {
+    console.log('adminService: Making request to /admin/dashboard/stats');
+    const token = localStorage.getItem('adminToken');
+    console.log('adminService: Admin token exists:', !!token);
+    
     const response = await api.get('/admin/dashboard/stats');
+    console.log('adminService: Dashboard stats response:', response);
+    console.log('adminService: Response status:', response.status);
+    console.log('adminService: Response data:', response.data);
+    
     return response.data;
   } catch (error) {
-    console.error('Error fetching admin dashboard stats:', error);
+    console.error('adminService: Error fetching admin dashboard stats:', error);
+    console.error('adminService: Error response:', error.response);
+    console.error('adminService: Error status:', error.response?.status);
+    console.error('adminService: Error data:', error.response?.data);
     throw error;
   }
 };
@@ -14,10 +25,14 @@ export const getAdminDashboardStats = async () => {
 // User Management
 export const getAllUsers = async () => {
   try {
+    console.log('adminService: Making request to /admin/users');
     const response = await api.get('/admin/users');
+    console.log('adminService: Users response:', response);
+    console.log('adminService: Users data:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('adminService: Error fetching users:', error);
+    console.error('adminService: Error details:', error.response);
     throw error;
   }
 };
@@ -147,10 +162,14 @@ export const getTransactionById = async (transactionId) => {
 // Loan Management
 export const getAllLoans = async () => {
   try {
+    console.log('adminService: Making request to /admin/loans');
     const response = await api.get('/admin/loans');
+    console.log('adminService: Loans response:', response);
+    console.log('adminService: Loans data:', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error fetching loans:', error);
+    console.error('adminService: Error fetching loans:', error);
+    console.error('adminService: Error details:', error.response);
     throw error;
   }
 };

@@ -1,112 +1,91 @@
-# 🏦 Modern Banking Application | Full-Stack Spring Boot & React Platform
+# 🏦 NextGen Bank - Modern Digital Banking Platform
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/piyushku0331/Java_SpringBoot_Project/blob/main/README.md#license) [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.9-brightgreen.svg)](https://spring.io/projects/spring-boot) [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/) [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange.svg)](https://www.mysql.com/) [![SEO Optimized](https://img.shields.io/badge/SEO-Optimized-green.svg)](https://github.com/piyushku0331/Java_SpringBoot_Project) [![Responsive Design](https://img.shields.io/badge/Design-Responsive-purple.svg)](https://github.com/piyushku0331/Java_SpringBoot_Project) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/piyushku0331/Java_SpringBoot_Project/pulls)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4.9-brightgreen.svg)](https://spring.io/projects/spring-boot) [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/) [![MySQL](https://img.shields.io/badge/MySQL-8.0-orange.svg)](https://www.mysql.com/) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/piyushku0331/Java_SpringBoot_Project/pulls)
 
-## 🚀 Enterprise-Grade Digital Banking Solution
+> **A complete, production-ready digital banking solution with modern UI, comprehensive admin panel, and enterprise-grade security.**
 
-A **production-ready, SEO-optimized** full-stack banking application built with modern technologies. Features comprehensive banking operations, advanced security, and a stunning user interface with 3D animations and glassmorphism design.
+## 📖 Table of Contents
 
-### ✨ **Key Features & SEO Benefits**
+- [Overview](#overview)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Quick Start](#quick-start)
+- [Installation Guide](#installation-guide)
+- [Configuration](#configuration)
+- [API Documentation](#api-documentation)
+- [Admin Panel](#admin-panel)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
 
-🔐 **Advanced Security Architecture**
-- JWT-based authentication with BCrypt encryption
-- Role-based access control (Admin/Customer)
-- Secure API endpoints with token validation
-- Password reset and account recovery
+## 🌟 Overview
 
-💰 **Complete Banking Operations**
-- Multi-account management with real-time balance tracking
-- Instant money transfers and transaction processing
-- Comprehensive loan application and management system
-- Detailed transaction history and reporting
+NextGen Bank is a full-stack digital banking platform that provides a complete banking experience for both customers and administrators. Built with Spring Boot and React, it offers secure transactions, account management, loan processing, and a comprehensive admin dashboard.
 
-🎨 **Modern UI/UX Design**
-- **SEO-optimized** landing pages with meta tags
-- Responsive design for all devices (mobile-first approach)
-- 3D animations and glassmorphism effects
-- Accessibility features (WCAG compliant)
-- Fast loading times and performance optimization
+### 🎯 What This Application Does
 
-📊 **Admin Dashboard**
-- User management and account oversight
-- Transaction monitoring and reporting
-- Loan approval workflows
-- System analytics and insights
+**For Customers:**
+- Create and manage multiple bank accounts
+- Transfer money between accounts instantly
+- View detailed transaction history
+- Apply for loans and track applications
+- Secure login with JWT authentication
 
-🔍 **SEO Optimizations Implemented**
-- Semantic HTML structure with proper heading hierarchy
-- Meta descriptions and Open Graph tags
-- Optimized images with alt attributes
-- Fast loading performance (< 3s load time)
-- Mobile-responsive design
-- Clean URL structure
-- Schema markup for rich snippets
+**For Administrators:**
+- Manage all user accounts and transactions
+- Approve or reject loan applications
+- Monitor system statistics and analytics
+- Suspend/activate user accounts
+- Generate reports and insights
 
-[🚀 **Get Started Now**](#quick-start) | [📖 **View Live Demo**](https://github.com/piyushku0331/Java_SpringBoot_Project)
+## ✨ Features
 
-## Installation
+### 🔐 Security & Authentication
+- **JWT Token Authentication** - Secure login system
+- **Password Encryption** - BCrypt hashing for passwords
+- **Role-Based Access** - Separate admin and customer portals
+- **Session Management** - Automatic logout on token expiry
 
-Banking Application has been designed for easy setup and deployment, and **you can run it locally or deploy it to the cloud**:
+### 💰 Banking Operations
+- **Multi-Account Support** - Savings, Current, Fixed Deposit accounts
+- **Real-Time Transfers** - Instant money transfers between accounts
+- **Transaction History** - Detailed records with filtering options
+- **Balance Tracking** - Live balance updates
 
-* Use [Quick Start](#quick-start) to get the application running locally.
-* [Configure Database](#database-setup) to connect to your MySQL instance.
-* [Deploy to Production](#production-deployment) when you're ready to go live.
+### 🏦 Loan Management
+- **Loan Applications** - Apply for personal, home, or business loans
+- **Credit Assessment** - Automated eligibility checking
+- **Approval Workflow** - Admin review and approval process
+- **Payment Tracking** - EMI schedules and payment history
 
-## Documentation
+### 📊 Admin Dashboard
+- **User Management** - View, edit, suspend user accounts
+- **Transaction Monitoring** - Real-time transaction oversight
+- **Loan Approval System** - Review and process loan applications
+- **Analytics & Reports** - System statistics and insights
+- **Account Termination** - Permanently close user accounts
 
-You can find comprehensive setup instructions below.
+### 🎨 Modern UI/UX
+- **Responsive Design** - Works on desktop, tablet, and mobile
+- **Dark Theme** - Modern glassmorphism design
+- **Smooth Animations** - 3D effects and transitions
+- **Intuitive Navigation** - User-friendly interface
+- **Accessibility** - WCAG compliant design
 
-Check out the [Quick Start](#quick-start) section for immediate setup.
+## 📱 Screenshots
 
-The documentation covers:
+### Customer Dashboard
+![Customer Dashboard](docs/screenshots/customer-dashboard.png)
+*Clean, intuitive dashboard showing account balances and recent transactions*
 
-* [Installation](#installation)
-* [Quick Start](#quick-start)
-* [Database Setup](#database-setup)
-* [API Reference](#api-reference)
-* [Contributing](#contributing)
+### Admin Panel
+![Admin Panel](docs/screenshots/admin-panel.png)
+*Comprehensive admin dashboard with user management and system analytics*
 
-## Examples
+### Transaction History
+![Transactions](docs/screenshots/transactions.png)
+*Detailed transaction history with filtering and search capabilities*
 
-We have several examples to get you started. Here's a simple transaction example:
-
-```java
-@RestController
-@RequestMapping("/api/customer")
-public class TransactionController {
-    
-    @PostMapping("/transactions")
-    public ResponseEntity<Transaction> createTransaction(@RequestBody TransactionRequest request) {
-        Transaction transaction = transactionService.processTransaction(request);
-        return ResponseEntity.ok(transaction);
-    }
-}
-```
-
-And here's how the frontend handles authentication:
-
-```jsx
-import { useAuth } from './context/AuthContext';
-
-function LoginForm() {
-  const { login } = useAuth();
-  
-  const handleSubmit = async (credentials) => {
-    try {
-      await login(credentials);
-      navigate('/dashboard');
-    } catch (error) {
-      setError('Invalid credentials');
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      {/* Login form fields */}
-    </form>
-  );
-}
-```
 
 ## 🚀 Quick Start
 
@@ -116,175 +95,452 @@ function LoginForm() {
 - 🐬 MySQL 8.0+
 - 📦 Maven 3.6+
 
-### ⚡ One-Click Setup
+### ⚡ Quick Setup (5 Minutes)
 
 ```bash
-# 1️⃣ Clone the SEO-optimized banking application
+# 1️⃣ Clone the repository
 git clone https://github.com/piyushku0331/Java_SpringBoot_Project.git
 cd Java_SpringBoot_Project
 
-# 2️⃣ Setup Backend (Spring Boot API)
+# 2️⃣ Setup Backend (Spring Boot)
 cd backend/springboot_project_backend
 mvn clean install
 mvn spring-boot:run
 
-# 3️⃣ Setup Frontend (React App) - New Terminal
-cd frontend
+# 3️⃣ Setup Frontend (React) - Open new terminal
+cd ../../frontend
 npm install
 npm start
 ```
 
-### 🗄️ Database Configuration
-1. **Create Database:** `CREATE DATABASE banking_db;`
-2. **Configure Connection:** Update `application.properties`:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/banking_db
-   spring.datasource.username=your_username
-   spring.datasource.password=your_password
-   ```
-3. **Auto-Migration:** Tables created automatically on first run
+**That's it! 🎉** Your banking application is now running!
 
-### 🌐 Access Points
-- **🎨 Frontend (React):** http://localhost:3000
+### 🌐 Access Your Application
+- **🎨 Customer Portal:** http://localhost:3000
+- **👨‍💼 Admin Dashboard:** http://localhost:3000/admin/login
 - **⚙️ Backend API:** http://localhost:8080/api
-- **📊 Admin Panel:** http://localhost:3000/admin/login
-- **📱 Mobile-Optimized:** Fully responsive on all devices
 
-### 🔑 Default Admin Credentials
+### 🔑 Login Credentials
+
+**Admin Access:**
 ```
-Username: admin@bank.com
+Email: admin@bank.com
 Password: admin123
 ```
 
-## 🏗️ Architecture & Technology Stack
+**Test Customer:**
+- Register new account at http://localhost:3000/register
+- Use any valid email format and secure password
+- Verify email functionality (if configured)
 
-### **Backend (Spring Boot)**
-- **Framework:** Spring Boot 3.4.9 with Spring Security
-- **Database:** MySQL 8.0 with JPA/Hibernate
-- **Authentication:** JWT tokens with BCrypt encryption
-- **API:** RESTful endpoints with comprehensive error handling
+## 🛠️ Installation Guide
 
-### **Frontend (React)**
-- **Framework:** React 18.2.0 with modern hooks
-- **Styling:** CSS3 with 3D animations & glassmorphism
-- **State Management:** Context API for authentication
-- **Routing:** React Router v6 with protected routes
-- **Performance:** Optimized for Core Web Vitals
+### Step 1: Database Setup
 
-### **SEO & Performance Features**
-- ⚡ **Fast Loading:** < 3s initial load time
-- 📱 **Mobile-First:** Responsive design for all devices  
-- 🔍 **SEO Optimized:** Meta tags, structured data, semantic HTML
-- ♿ **Accessible:** WCAG 2.1 AA compliant
-- 🎨 **Modern UI:** 3D effects, smooth animations, glass morphism
+1. **Install MySQL 8.0+**
+2. **Create Database:**
+   ```sql
+   CREATE DATABASE banking_db;
+   ```
+3. **Configure Connection** in `backend/springboot_project_backend/src/main/resources/application.properties`:
+   ```properties
+   spring.datasource.url=jdbc:mysql://localhost:3306/banking_db
+   spring.datasource.username=your_mysql_username
+   spring.datasource.password=your_mysql_password
+   ```
 
-## 📚 API Reference
+### Step 2: Backend Setup
 
-### 🔐 Authentication Endpoints
-```http
-POST /api/auth/register          # User registration with validation
-POST /api/auth/login             # Secure JWT-based login
-POST /api/auth/reset-password    # Password reset functionality
-POST /api/admin/login            # Admin authentication
+```bash
+cd backend/springboot_project_backend
+
+# Install dependencies
+mvn clean install
+
+# Run the application (will create tables automatically)
+mvn spring-boot:run
 ```
 
-### 💳 Account Management
+**✅ Backend Success Indicators:**
+- Console shows: "Started SpringbootProjectBackendApplication"
+- No error messages about database connection
+- API accessible at http://localhost:8080/api
+
+### Step 3: Frontend Setup
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
+```
+
+**✅ Frontend Success Indicators:**
+- Browser opens automatically to http://localhost:3000
+- No compilation errors
+- Landing page loads with "NextGen Bank" branding
+
+## ⚙️ Configuration
+
+### Environment Variables
+
+**Backend (.env or application.properties):**
+```properties
+# Database Configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/banking_db
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+
+# JWT Configuration
+jwt.secret=your_jwt_secret_key_here
+jwt.expiration=86400000
+
+# Server Configuration
+server.port=8080
+```
+
+**Frontend (.env):**
+```bash
+# API Base URL
+REACT_APP_API_URL=http://localhost:8080/api
+
+# App Configuration
+REACT_APP_NAME=NextGen Bank
+REACT_APP_VERSION=1.0.0
+```
+
+## 🏗️ Technology Stack
+
+### Backend Architecture
+```
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   React App     │───▶│   Spring Boot    │───▶│   MySQL DB      │
+│   (Frontend)    │    │   (Backend API)  │    │   (Database)    │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+```
+
+**Backend (Spring Boot 3.4.9):**
+- 🔐 **Security:** Spring Security + JWT Authentication
+- 🗄️ **Database:** MySQL 8.0 with JPA/Hibernate ORM
+- 🔒 **Encryption:** BCrypt password hashing
+- 🌐 **API:** RESTful endpoints with proper error handling
+- ✅ **Validation:** Request validation and data sanitization
+
+**Frontend (React 18.2.0):**
+- ⚛️ **Framework:** Modern React with Hooks (useState, useEffect, useContext)
+- 🎨 **Styling:** CSS3 with glassmorphism and 3D animations
+- 🔄 **State Management:** Context API for global state
+- 🛣️ **Routing:** React Router v6 with protected routes
+- 📱 **Responsive:** Mobile-first responsive design
+
+**Key Libraries & Dependencies:**
+- **Axios:** HTTP client for API calls
+- **React Router:** Client-side routing
+- **JWT:** JSON Web Token authentication
+- **Maven:** Backend dependency management
+- **npm:** Frontend package management
+
+## 📚 API Documentation
+
+### 🔐 Authentication & Authorization
+
+**Customer Authentication:**
 ```http
-GET    /api/customer/accounts           # Fetch user accounts
+POST /api/auth/register
+POST /api/auth/login
+POST /api/auth/logout
+```
+
+**Admin Authentication:**
+```http
+POST /api/admin/login
+POST /api/admin/logout
+```
+
+### 👤 Customer Endpoints
+
+**Account Management:**
+```http
+GET    /api/customer/accounts           # Get all user accounts
 POST   /api/customer/accounts           # Create new account
-GET    /api/customer/accounts/{id}      # Account details & balance
-PUT    /api/customer/accounts/{id}      # Update account info
+GET    /api/customer/accounts/{id}      # Get account details
+PUT    /api/customer/accounts/{id}      # Update account
 DELETE /api/customer/accounts/{id}      # Close account
 ```
 
-### 💰 Transaction Operations
+**Transactions:**
 ```http
-GET  /api/customer/transactions         # Transaction history
+GET  /api/customer/transactions         # Get transaction history
 POST /api/customer/transactions         # Create new transaction
-GET  /api/customer/transactions/{id}    # Transaction details
+GET  /api/customer/transactions/{id}    # Get transaction details
 ```
 
-### 🏦 Loan Services
+**Loans:**
 ```http
-GET  /api/customer/loans               # User loan portfolio
-POST /api/customer/loans               # Apply for new loan
-GET  /api/customer/loans/{id}          # Loan details & schedule
-POST /api/customer/loans/{id}/payment  # Make loan payment
+GET  /api/customer/loans               # Get user loans
+POST /api/customer/loans               # Apply for loan
+GET  /api/customer/loans/{id}          # Get loan details
 ```
 
 ### 👨‍💼 Admin Endpoints
+
+**Dashboard & Analytics:**
 ```http
-GET    /api/admin/users                # User management
-GET    /api/admin/transactions         # All transactions
-GET    /api/admin/loans               # Loan approvals
-POST   /api/admin/loans/{id}/approve  # Approve/reject loans
+GET /api/admin/dashboard/stats         # Get dashboard statistics
 ```
 
-## 🚀 Deployment & Production
+**User Management:**
+```http
+GET    /api/admin/users                # Get all users
+PUT    /api/admin/users/{id}/suspend   # Suspend user account
+PUT    /api/admin/users/{id}/activate  # Activate user account
+DELETE /api/admin/users/{id}           # Delete user account
+```
 
-### **Environment Variables**
+**Transaction Monitoring:**
+```http
+GET /api/admin/transactions            # Get all transactions
+```
+
+**Loan Management:**
+```http
+GET  /api/admin/loans                  # Get all loan applications
+POST /api/admin/loans/{id}/approve     # Approve loan
+POST /api/admin/loans/{id}/reject      # Reject loan
+```
+
+**Account Management:**
+```http
+GET /api/admin/accounts                # Get all accounts
+PUT /api/admin/accounts/{id}/freeze    # Freeze account
+PUT /api/admin/accounts/{id}/unfreeze  # Unfreeze account
+```
+
+## 👨‍💼 Admin Panel
+
+The admin panel provides comprehensive management capabilities for banking operations.
+
+### 🔑 Admin Access
+1. Navigate to http://localhost:3000/admin/login
+2. Use credentials: `admin@bank.com` / `admin123`
+3. Access full administrative dashboard
+
+### 📊 Dashboard Features
+
+**Quick Statistics:**
+- Total registered users
+- Active accounts count
+- Pending loan applications
+- Total transaction volume
+
+**User Management:**
+- View all registered customers
+- Suspend/activate user accounts
+- Delete user accounts permanently
+- Search and filter users
+
+**Loan Approval System:**
+- Review pending loan applications
+- Approve or reject loans with comments
+- View loan history and details
+- Track loan performance metrics
+
+**Transaction Monitoring:**
+- Monitor all system transactions
+- Filter by date, amount, or user
+- Detect suspicious activities
+- Generate transaction reports
+
+**Account Termination:**
+- Permanently close customer accounts
+- Handle account closure procedures
+- Maintain audit trails
+
+### 🔒 Admin Security Features
+- Separate admin authentication system
+- Role-based access control
+- Session timeout management
+- Activity logging and audit trails
+
+## 🐛 Troubleshooting
+
+### Common Issues & Solutions
+
+**Backend Won't Start:**
 ```bash
-# Backend (.env)
-SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/banking_db
-SPRING_DATASOURCE_USERNAME=your_username
-SPRING_DATASOURCE_PASSWORD=your_password
-JWT_SECRET=your_jwt_secret_key
+# Check if MySQL is running
+sudo systemctl status mysql
 
-# Frontend (.env)
-REACT_APP_API_URL=http://localhost:8080/api
+# Verify database exists
+mysql -u root -p
+SHOW DATABASES;
+
+# Check application.properties configuration
 ```
 
-### **Production Deployment**
-- **Docker Support:** Containerized deployment ready
-- **Cloud Ready:** AWS, Azure, GCP compatible
-- **CI/CD:** GitHub Actions workflow included
-- **SSL/HTTPS:** Production security configured
+**Frontend Build Errors:**
+```bash
+# Clear npm cache
+npm cache clean --force
+
+# Delete node_modules and reinstall
+rm -rf node_modules package-lock.json
+npm install
+```
+
+**Database Connection Issues:**
+1. Verify MySQL is running on port 3306
+2. Check username/password in application.properties
+3. Ensure database `banking_db` exists
+4. Verify firewall settings
+
+**JWT Token Issues:**
+- Clear browser localStorage
+- Check token expiration settings
+- Verify JWT secret configuration
+
+**Admin Panel Not Loading:**
+1. Verify backend is running (http://localhost:8080/api)
+2. Check browser console for errors
+3. Ensure admin credentials are correct
+4. Clear browser cache and cookies
+
+### 🔧 Debug Mode
+
+**Enable Backend Logging:**
+```properties
+# Add to application.properties
+logging.level.com.yourpackage=DEBUG
+logging.level.org.springframework.security=DEBUG
+```
+
+**Frontend Debug Console:**
+- Open browser DevTools (F12)
+- Check Console tab for errors
+- Monitor Network tab for API calls
+- Use React Developer Tools extension
+
+### 📞 Getting Help
+
+If you encounter issues:
+1. Check the [troubleshooting section](#troubleshooting)
+2. Review console logs for error messages
+3. Verify all prerequisites are installed
+4. Check database connectivity
+5. Open an issue on GitHub with error details
 
 ## 🤝 Contributing
 
-We welcome contributions to make this banking application even better! This project follows modern development practices and is actively maintained.
+We welcome contributions! This project follows modern development practices and maintains high code quality standards.
 
-### **Development Process**
-- 🔄 **Agile Development:** Feature-driven development
-- 🧪 **Testing:** Unit tests and integration tests
-- 📝 **Documentation:** Comprehensive API documentation
-- 🔒 **Security:** Regular security audits and updates
+### 🚀 Development Workflow
 
-### **How to Contribute**
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
+1. **Fork & Clone**
+   ```bash
+   git clone https://github.com/yourusername/Java_SpringBoot_Project.git
+   cd Java_SpringBoot_Project
+   ```
 
-### **Areas for Contribution**
-- 🔐 Security enhancements
-- 🎨 UI/UX improvements
+2. **Create Feature Branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Make Changes**
+   - Follow existing code style
+   - Add tests for new features
+   - Update documentation
+
+4. **Test Your Changes**
+   ```bash
+   # Backend tests
+   cd backend/springboot_project_backend
+   mvn test
+   
+   # Frontend tests
+   cd frontend
+   npm test
+   ```
+
+5. **Submit Pull Request**
+   - Provide clear description
+   - Reference related issues
+   - Ensure CI passes
+
+### 🎯 Areas for Contribution
+
+**High Priority:**
+- 🔐 Enhanced security features
+- 📊 Advanced analytics dashboard
+- 🧪 Increased test coverage
 - 📱 Mobile app development
-- 🧪 Test coverage expansion
-- 📊 Analytics and reporting features
 
-## 📊 Project Stats & SEO Performance
+**Medium Priority:**
+- 🎨 UI/UX improvements
+- 🌐 Internationalization (i18n)
+- 📈 Performance optimizations
+- 🔔 Notification system
 
-- ⭐ **GitHub Stars:** Growing community
-- 🍴 **Forks:** Active development
-- 🐛 **Issues:** Responsive maintenance
-- 📈 **SEO Score:** 95+ (Lighthouse)
-- ⚡ **Performance:** < 3s load time
-- 📱 **Mobile Score:** 98+ (Google PageSpeed)
+**Documentation:**
+- 📚 API documentation improvements
+- 🎥 Video tutorials
+- 📖 Developer guides
+- 🔧 Deployment guides
+
+### 📋 Code Standards
+
+**Backend (Java/Spring Boot):**
+- Follow Spring Boot best practices
+- Use proper exception handling
+- Implement comprehensive logging
+- Write unit and integration tests
+
+**Frontend (React):**
+- Use functional components with hooks
+- Follow React best practices
+- Implement proper error boundaries
+- Write component tests
+
+**General:**
+- Clear, descriptive commit messages
+- Proper code documentation
+- Follow existing naming conventions
+- Maintain backwards compatibility
 
 ## 📄 License
 
-This project is **MIT Licensed** - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Spring Boot team for the excellent framework
+- React team for the powerful frontend library
+- MySQL for reliable database management
+- Open source community for inspiration and support
+
+## 📞 Support
+
+If you find this project helpful, please consider:
+- ⭐ Starring the repository
+- 🐛 Reporting bugs and issues
+- 💡 Suggesting new features
+- 🤝 Contributing to the codebase
 
 ---
 
 <div align="center">
 
-**🏦 Built with ❤️ for Modern Banking**
+### 🏦 NextGen Bank - Modern Digital Banking Platform
 
-[⭐ Star this repo](https://github.com/piyushku0331/Java_SpringBoot_Project) • [🐛 Report Bug](https://github.com/piyushku0331/Java_SpringBoot_Project/issues) • [✨ Request Feature](https://github.com/piyushku0331/Java_SpringBoot_Project/issues)
+**Built with ❤️ using Spring Boot & React**
 
-**Keywords:** Spring Boot Banking App, React Banking Application, Full Stack Banking System, JWT Authentication, MySQL Banking Database, SEO Optimized Banking Platform, Modern Banking UI, Responsive Banking Website
+[⭐ Star Repository](https://github.com/piyushku0331/Java_SpringBoot_Project) • [🐛 Report Issues](https://github.com/piyushku0331/Java_SpringBoot_Project/issues) • [💡 Request Features](https://github.com/piyushku0331/Java_SpringBoot_Project/issues/new)
+
+---
+
+**Tech Stack:** `Spring Boot` `React` `MySQL` `JWT` `REST API` `Responsive Design`
 
 </div>

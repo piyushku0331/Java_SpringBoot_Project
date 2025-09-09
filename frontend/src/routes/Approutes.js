@@ -17,6 +17,8 @@ import LoanApplication from "../pages/Loans/LoanApplication";
 import AdminLogin from "../components/admin/AdminLogin";
 import AdminDashboard from "../components/admin/AdminDashboard";
 import UserManagement from "../components/admin/UserManagement";
+import LoanApproval from "../components/admin/LoanApproval";
+import AccountTermination from "../components/admin/AccountTermination";
 import NotFound from "../pages/NotFound/NotFound";
 
 export default function AppRoutes() {
@@ -112,6 +114,8 @@ export default function AppRoutes() {
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route path="/admin/dashboard" element={<AdminDashboard />} />
       <Route path="/admin/users" element={<UserManagement />} />
+      <Route path="/admin/loan-approval" element={<LoanApproval />} />
+      <Route path="/admin/account-termination" element={<AccountTermination />} />
 
       <Route path="*" element={<NotFound />} />
     </Routes>

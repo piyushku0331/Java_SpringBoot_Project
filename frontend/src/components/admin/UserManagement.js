@@ -13,11 +13,24 @@ const UserManagement = () => {
 
   const fetchUsers = useCallback(async () => {
     try {
+      console.log('UserManagement: Fetching users...');
       const response = await getAllUsers();
-      const data = Array.isArray(response) ? response : [];
+      console.log('UserManagement: Raw response:', response);
+      
+      let data = [];
+      if (Array.isArray(response)) {
+        data = response;
+      } else if (response && Array.isArray(response.data)) {
+        data = response.data;
+      } else if (response && response.users && Array.isArray(response.users)) {
+        data = response.users;
+      }
+      
+      console.log('UserManagement: Processed users data:', data);
       setUsers(data);
     } catch (error) {
-      setUsers([]); // Ensure users is always an array
+      console.error('UserManagement: Error fetching users:', error);
+      setUsers([]);
       if (error.response?.status === 401 || error.response?.status === 403) {
         logoutAdmin();
         navigate('/admin/login');
