@@ -1,17 +1,37 @@
 package com.Springboot_Project_Backend.springboot_project_backend.dto;
 
 import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AdminDashboardStats {
+    @JsonProperty("totalUsers")
     private long totalUsers;
+    
+    @JsonProperty("activeUsers")
     private long activeUsers;
+    
+    @JsonProperty("suspendedUsers")
     private long suspendedUsers;
+    
+    @JsonProperty("totalAccounts")
     private long totalAccounts;
+    
+    @JsonProperty("totalLoans")
     private long totalLoans;
+    
+    @JsonProperty("pendingLoans")
     private long pendingLoans;
+    
+    @JsonProperty("totalDeposits")
     private BigDecimal totalDeposits;
+    
+    @JsonProperty("totalLoanAmount")
     private BigDecimal totalLoanAmount;
+    
+    @JsonProperty("totalTransactions")
     private long totalTransactions;
+    
+    @JsonProperty("todayTransactions")
     private long todayTransactions;
     
     // Constructors

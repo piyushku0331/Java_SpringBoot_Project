@@ -17,7 +17,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     boolean existsByLoanNumber(String loanNumber);
     
     @Query("SELECT COUNT(l) FROM Loan l WHERE l.status = ?1")
-    long countByStatus(String status);
+    long countByStatus(Loan.LoanStatus status);
     
     @Query("SELECT COALESCE(SUM(l.principalAmount), 0) FROM Loan l")
     BigDecimal getTotalLoanAmount();

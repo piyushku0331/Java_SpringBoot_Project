@@ -12,35 +12,10 @@ const AdminDashboard = () => {
 
   const fetchDashboardStats = useCallback(async () => {
     try {
-      // Debug JWT token
-      const token = localStorage.getItem('adminToken');
-      if (token) {
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          console.log('AdminDashboard: JWT payload:', payload);
-          console.log('AdminDashboard: Token expires at:', new Date(payload.exp * 1000));
-          console.log('AdminDashboard: Current time:', new Date());
-          console.log('AdminDashboard: Token expired:', payload.exp * 1000 < Date.now());
-        } catch (jwtError) {
-          console.error('AdminDashboard: Error decoding JWT:', jwtError);
-        }
-      }
-      
       const data = await getAdminDashboardStats();
       setStats(data);
     } catch (error) {
-      console.error('Failed to fetch dashboard stats:', error);
-      console.error('Error status:', error.response?.status);
-      console.error('Error data:', error.response?.data);
-      
-      // If it's a 403, the admin token might be invalid or lack permissions
       if (error.response?.status === 403) {
-        console.log('Admin access denied - checking if token issue or permissions issue');
-        const token = localStorage.getItem('adminToken');
-        if (token) {
-          console.log('Token exists but access denied - likely permissions issue');
-          console.log('This suggests the user logged in successfully but lacks admin role');
-        }
         logoutAdmin();
         navigate('/admin/login');
       }
@@ -53,23 +28,15 @@ const AdminDashboard = () => {
     const token = localStorage.getItem('adminToken');
     const admin = localStorage.getItem('adminInfo');
     
-    console.log('AdminDashboard: Checking admin auth');
-    console.log('AdminDashboard: adminToken exists:', !!token);
-    console.log('AdminDashboard: adminInfo exists:', !!admin);
-    console.log('AdminDashboard: adminToken value:', token);
-    
     if (!token || !admin) {
-      console.log('AdminDashboard: No admin credentials, redirecting to login');
       navigate('/admin/login');
       return;
     }
 
     try {
       setAdminInfo(JSON.parse(admin));
-      console.log('AdminDashboard: Admin info set, fetching dashboard stats');
       fetchDashboardStats();
     } catch (error) {
-      console.error('AdminDashboard: Error parsing admin info:', error);
       navigate('/admin/login');
     }
   }, [navigate, fetchDashboardStats]);

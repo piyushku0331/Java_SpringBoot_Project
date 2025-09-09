@@ -45,11 +45,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         logger.info("Starting data initialization for MySQL database");
-
-        // Reset auto-increment for testing (optional - uncomment if needed)
-        // resetAutoIncrement();
-
-        // Create default admin if none exists
+        
         if (adminRepository.count() == 0) {
             logger.info("No admins found, creating default admin");
             createDefaultAdmin();

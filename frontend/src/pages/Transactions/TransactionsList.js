@@ -25,8 +25,7 @@ const TransactionsList = () => {
       console.log('TransactionsList: Current user:', user);
       console.log('TransactionsList: User ID:', user?.id);
 
-      // Use user ID if available, otherwise use default for testing
-      const userId = user?.id || 4; // Default to user ID 4 for testing
+      const userId = user?.id || 4;
       console.log('TransactionsList: Using userId:', userId);
 
       try {
@@ -34,7 +33,6 @@ const TransactionsList = () => {
         const response = await getUserAccounts(userId);
         console.log('TransactionsList: Accounts response:', response);
         
-        // Handle the response properly - check if it's wrapped in data property
         let accountsData = [];
         if (Array.isArray(response)) {
           accountsData = response;
@@ -48,11 +46,9 @@ const TransactionsList = () => {
         setAccounts(accountsData);
       } catch (err) {
         console.error('Error fetching accounts:', err);
-        setAccounts([]); // Set empty array on error
-        // If still failing, try with a different approach
+        setAccounts([]);
         if (err.response?.status === 400) {
           console.log('TransactionsList: Trying alternative approach...');
-          // Could implement fallback logic here
         }
       }
     };
@@ -68,13 +64,11 @@ const TransactionsList = () => {
         setLoading(true);
         const data = await getTransactions(selectedAccountId !== 'all' ? selectedAccountId : null);
         console.log('Received transactions data:', data);
-        // Ensure data is an array
         setTransactions(Array.isArray(data) ? data : []);
         setError(null);
       } catch (err) {
         console.error('Error fetching transactions:', err);
-        setTransactions([]); // Set empty array on error
-        // Check if it's a network error (backend not running)
+        setTransactions([]);
         if (err.code === 'ERR_NETWORK' || err.message.includes('Network Error')) {
           setError('Backend server is not running. Please start the Spring Boot application on port 8080.');
         } else if (err.response?.status === 401) {

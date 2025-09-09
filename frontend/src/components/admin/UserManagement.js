@@ -13,10 +13,11 @@ const UserManagement = () => {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const data = await getAllUsers();
+      const response = await getAllUsers();
+      const data = Array.isArray(response) ? response : [];
       setUsers(data);
     } catch (error) {
-      console.error('Failed to fetch users:', error);
+      setUsers([]); // Ensure users is always an array
       if (error.response?.status === 401 || error.response?.status === 403) {
         logoutAdmin();
         navigate('/admin/login');

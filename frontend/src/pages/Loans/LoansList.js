@@ -53,15 +53,13 @@ const LoansList = () => {
         
         // If response is a string, try to parse it as JSON
         if (typeof response === 'string') {
-          console.log('LoansList: String response length:', response.length);
-          console.log('LoansList: First 200 chars:', response.substring(0, 200));
-          console.log('LoansList: Last 200 chars:', response.substring(response.length - 200));
+          console.log('LoansList: String response detected, length:', response.length);
           
           try {
             // Check if string starts with [ or { to validate it's JSON
             const trimmed = response.trim();
             if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) {
-              console.error('LoansList: Response does not appear to be JSON');
+              console.error('LoansList: Response does not appear to be JSON, treating as empty array');
               parsedResponse = [];
             } else {
               parsedResponse = JSON.parse(trimmed);
@@ -69,39 +67,19 @@ const LoansList = () => {
             }
           } catch (parseError) {
             console.error('LoansList: JSON parsing failed:', parseError.message);
-            console.log('LoansList: Error at position:', parseError.message.match(/position (\d+)/)?.[1]);
             
-            // Try to extract valid JSON from the beginning
-            try {
-              const bracketIndex = response.indexOf('[');
-              if (bracketIndex !== -1) {
-                // Find the matching closing bracket
-                let openBrackets = 0;
-                let closeBracketIndex = -1;
-                
-                for (let i = bracketIndex; i < response.length; i++) {
-                  if (response[i] === '[') openBrackets++;
-                  if (response[i] === ']') {
-                    openBrackets--;
-                    if (openBrackets === 0) {
-                      closeBracketIndex = i;
-                      break;
-                    }
-                  }
-                }
-                
-                if (closeBracketIndex !== -1) {
-                  const validJson = response.substring(bracketIndex, closeBracketIndex + 1);
-                  parsedResponse = JSON.parse(validJson);
-                  console.log('LoansList: Successfully extracted and parsed partial JSON');
-                } else {
-                  parsedResponse = [];
-                }
-              } else {
+            // Try to find and extract valid JSON array from corrupted response
+            const jsonArrayMatch = response.match(/\[[\s\S]*?\]/);
+            if (jsonArrayMatch) {
+              try {
+                parsedResponse = JSON.parse(jsonArrayMatch[0]);
+                console.log('LoansList: Successfully extracted valid JSON array from corrupted response');
+              } catch (extractError) {
+                console.error('LoansList: Failed to parse extracted JSON:', extractError);
                 parsedResponse = [];
               }
-            } catch (extractError) {
-              console.error('LoansList: Failed to extract valid JSON:', extractError);
+            } else {
+              console.error('LoansList: No valid JSON array found in response, using empty array');
               parsedResponse = [];
             }
           }

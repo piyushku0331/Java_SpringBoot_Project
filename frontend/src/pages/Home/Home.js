@@ -7,7 +7,6 @@ export default function Home() {
 
     return (
         <div className="home-container page-container">
-            {/* Hero Section with Three Boxes */}
             <section className="hero-section">
                 <div className="hero-content stagger-children">
                     <div className="hero-badge">
@@ -63,7 +62,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Enhanced Features Section */}
             <section className="features-section">
                 <div className="section-header">
                     <h2 className="section-title">Why Choose Us</h2>
@@ -118,7 +116,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Customer Testimonials Section */}
             <section className="testimonials-section">
                 <div className="section-header">
                     <h2 className="section-title">What Our Customers Say</h2>
@@ -202,7 +199,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Team Members Section */}
             <section className="team-section">
                 <div className="section-header">
                     <h2 className="section-title">Meet Our Team</h2>
@@ -332,7 +328,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Interactive CTA Section */}
             <section className="cta-section">
                 <div className="cta-background">
                     <div className="cta-particles">

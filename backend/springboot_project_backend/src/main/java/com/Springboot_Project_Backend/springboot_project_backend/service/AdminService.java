@@ -5,6 +5,7 @@ import com.Springboot_Project_Backend.springboot_project_backend.dto.AdminLoginR
 import com.Springboot_Project_Backend.springboot_project_backend.dto.AdminResponse;
 import com.Springboot_Project_Backend.springboot_project_backend.entity.Admin;
 import com.Springboot_Project_Backend.springboot_project_backend.entity.User;
+import com.Springboot_Project_Backend.springboot_project_backend.entity.Loan;
 import com.Springboot_Project_Backend.springboot_project_backend.exception.ResourceNotFoundException;
 import com.Springboot_Project_Backend.springboot_project_backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,27 +67,107 @@ public class AdminService {
     }
 
     public AdminDashboardStats getDashboardStats() {
-        long totalUsers = userRepository.count();
-        long activeUsers = userRepository.countByStatus(User.UserStatus.ACTIVE);
-        long suspendedUsers = userRepository.countByStatus(User.UserStatus.SUSPENDED);
-        
-        long totalAccounts = accountRepository.count();
-        long totalLoans = loanRepository.count();
-        long pendingLoans = loanRepository.countByStatus("PENDING");
-        
-        BigDecimal totalDeposits = accountRepository.getTotalBalance();
-        BigDecimal totalLoanAmount = loanRepository.getTotalLoanAmount();
-        
-        long totalTransactions = transactionRepository.count();
-        long todayTransactions = transactionRepository.countTransactionsToday(LocalDate.now());
-        
-        return new AdminDashboardStats(
-            totalUsers, activeUsers, suspendedUsers,
-            totalAccounts, totalLoans, pendingLoans,
-            totalDeposits != null ? totalDeposits : BigDecimal.ZERO,
-            totalLoanAmount != null ? totalLoanAmount : BigDecimal.ZERO,
-            totalTransactions, todayTransactions
-        );
+        try {
+            System.out.println("AdminService: Starting getDashboardStats...");
+            
+            // Initialize all variables with default values
+            long totalUsers = 0;
+            long activeUsers = 0;
+            long suspendedUsers = 0;
+            long totalAccounts = 0;
+            long totalLoans = 0;
+            long pendingLoans = 0;
+            BigDecimal totalDeposits = BigDecimal.ZERO;
+            BigDecimal totalLoanAmount = BigDecimal.ZERO;
+            long totalTransactions = 0;
+            long todayTransactions = 0;
+            
+            System.out.println("AdminService: Counting users...");
+            try {
+                totalUsers = userRepository.count();
+                activeUsers = userRepository.countByStatus(User.UserStatus.ACTIVE);
+                suspendedUsers = userRepository.countByStatus(User.UserStatus.SUSPENDED);
+                System.out.println("AdminService: Users - Total: " + totalUsers + ", Active: " + activeUsers + ", Suspended: " + suspendedUsers);
+            } catch (Exception e) {
+                System.err.println("AdminService: Error counting users: " + e.getMessage());
+            }
+            
+            System.out.println("AdminService: Counting accounts...");
+            try {
+                totalAccounts = accountRepository.count();
+                System.out.println("AdminService: Total accounts: " + totalAccounts);
+            } catch (Exception e) {
+                System.err.println("AdminService: Error counting accounts: " + e.getMessage());
+            }
+            
+            System.out.println("AdminService: Counting loans...");
+            try {
+                totalLoans = loanRepository.count();
+                System.out.println("AdminService: Total loans: " + totalLoans);
+            } catch (Exception e) {
+                System.err.println("AdminService: Error counting loans: " + e.getMessage());
+            }
+            
+            // Use enum instead of string for loan status
+            System.out.println("AdminService: Counting pending loans...");
+            try {
+                pendingLoans = loanRepository.countByStatus(Loan.LoanStatus.PENDING);
+                System.out.println("AdminService: Pending loans: " + pendingLoans);
+            } catch (Exception e) {
+                System.err.println("AdminService: Error counting pending loans: " + e.getMessage());
+            }
+            
+            System.out.println("AdminService: Getting total deposits...");
+            try {
+                BigDecimal deposits = accountRepository.getTotalBalance();
+                totalDeposits = deposits != null ? deposits : BigDecimal.ZERO;
+                System.out.println("AdminService: Total deposits: " + totalDeposits);
+            } catch (Exception e) {
+                System.err.println("AdminService: Error getting total deposits: " + e.getMessage());
+            }
+            
+            System.out.println("AdminService: Getting total loan amount...");
+            try {
+                BigDecimal loanAmount = loanRepository.getTotalLoanAmount();
+                totalLoanAmount = loanAmount != null ? loanAmount : BigDecimal.ZERO;
+                System.out.println("AdminService: Total loan amount: " + totalLoanAmount);
+            } catch (Exception e) {
+                System.err.println("AdminService: Error getting total loan amount: " + e.getMessage());
+            }
+            
+            System.out.println("AdminService: Counting transactions...");
+            try {
+                totalTransactions = transactionRepository.count();
+                System.out.println("AdminService: Total transactions: " + totalTransactions);
+            } catch (Exception e) {
+                System.err.println("AdminService: Error counting transactions: " + e.getMessage());
+            }
+            
+            System.out.println("AdminService: Counting today's transactions...");
+            try {
+                todayTransactions = transactionRepository.countTransactionsToday(LocalDate.now());
+                System.out.println("AdminService: Today's transactions: " + todayTransactions);
+            } catch (Exception e) {
+                System.err.println("AdminService: Error counting today's transactions: " + e.getMessage());
+            }
+            
+            System.out.println("AdminService: Creating AdminDashboardStats object...");
+            AdminDashboardStats stats = new AdminDashboardStats(
+                totalUsers, activeUsers, suspendedUsers,
+                totalAccounts, totalLoans, pendingLoans,
+                totalDeposits != null ? totalDeposits : BigDecimal.ZERO,
+                totalLoanAmount != null ? totalLoanAmount : BigDecimal.ZERO,
+                totalTransactions, todayTransactions
+            );
+            
+            System.out.println("AdminService: Successfully created dashboard stats");
+            return stats;
+            
+        } catch (Exception e) {
+            System.err.println("AdminService: Error in getDashboardStats: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     public List<AdminResponse> getAllAdmins() {

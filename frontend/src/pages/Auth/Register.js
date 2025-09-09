@@ -22,6 +22,31 @@ const Register = () => {
   });
   const [error, setError] = useState('');
   const [showCelebration, setShowCelebration] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState('');
+  const [emailValid, setEmailValid] = useState(null);
+
+  const checkPasswordStrength = (password) => {
+    if (password.length === 0) return '';
+    if (password.length < 8) return 'weak';
+    
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNumber = /\d/.test(password);
+    const hasSpecial = /[@$!%*?&]/.test(password);
+    
+    const score = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
+    
+    if (score === 4 && password.length >= 8) return 'strong';
+    if (score >= 2) return 'medium';
+    return 'weak';
+  };
+
+  const checkEmailDomain = (email) => {
+    if (!email.includes('@')) return null;
+    const allowedDomains = ['gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com', 'live.com'];
+    const emailDomain = email.toLowerCase().split('@')[1];
+    return allowedDomains.includes(emailDomain);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -29,6 +54,15 @@ const Register = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Real-time validation
+    if (name === 'password') {
+      setPasswordStrength(checkPasswordStrength(value));
+    }
+    if (name === 'email') {
+      setEmailValid(checkEmailDomain(value));
+    }
+    
     if (error) setError('');
   };
 
@@ -39,13 +73,28 @@ const Register = () => {
       return false;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+    // Email domain validation
+    const allowedDomains = ['gmail.com', 'outlook.com', 'yahoo.com', 'hotmail.com', 'live.com'];
+    const emailDomain = formData.email.toLowerCase().split('@')[1];
+    if (!allowedDomains.includes(emailDomain)) {
+      setError('Please use an email from Gmail, Outlook, or Yahoo');
       return false;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    // Enhanced password validation
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
+      return false;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    if (!passwordRegex.test(formData.password)) {
+      setError('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)');
+      return false;
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
       return false;
     }
 
@@ -139,9 +188,20 @@ const Register = () => {
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              placeholder="Enter your email"
+              placeholder="Enter your email (Gmail, Outlook, or Yahoo)"
               required
+              className={emailValid === false ? 'invalid' : emailValid === true ? 'valid' : ''}
             />
+            {emailValid === false && (
+              <div className="validation-message error">
+                Please use an email from Gmail, Outlook, or Yahoo
+              </div>
+            )}
+            {emailValid === true && (
+              <div className="validation-message success">
+                ✓ Valid email domain
+              </div>
+            )}
           </div>
 
           <div className="form-row">
@@ -153,9 +213,25 @@ const Register = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleInputChange}
-                placeholder="Enter password"
+                placeholder="Enter password (min 8 chars, uppercase, lowercase, number, special char)"
                 required
+                className={passwordStrength === 'weak' ? 'invalid' : passwordStrength === 'strong' ? 'valid' : ''}
               />
+              {passwordStrength && (
+                <div className={`password-strength ${passwordStrength}`}>
+                  <div className="strength-bar">
+                    <div className={`strength-fill ${passwordStrength}`}></div>
+                  </div>
+                  <span className="strength-text">
+                    Password strength: {passwordStrength.charAt(0).toUpperCase() + passwordStrength.slice(1)}
+                  </span>
+                </div>
+              )}
+              {formData.password && passwordStrength === 'weak' && (
+                <div className="validation-message error">
+                  Password must be at least 8 characters with uppercase, lowercase, number, and special character
+                </div>
+              )}
             </div>
 
             <div className="form-group">
