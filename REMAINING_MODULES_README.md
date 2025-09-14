@@ -228,63 +228,224 @@ export const getTransactions = async (accountId = null) => {
 **Base URL**: `/api/admin`
 
 **Endpoints:**
+
+**Authentication & Authorization:**
 - `POST /login` - Admin authentication
-  - Returns: JWT token and admin details
+  - Request Body: `{email, password}`
+  - Returns: `{token, admin: {id, email, firstName, lastName, role, status}}`
+  - Features: JWT token generation, last login tracking, status validation
 
-- `GET /dashboard/stats` - Dashboard statistics
-  - Returns: AdminDashboardStats with counts and totals
+**Dashboard & Analytics:**
+- `GET /dashboard/stats` - Comprehensive dashboard statistics
+  - Returns: `AdminDashboardStats` with real-time metrics
+  - Includes: user counts, account totals, loan statistics, transaction volumes
+  - Features: Error handling with fallback values, detailed logging
 
-- **Admin Management:**
-  - `GET /admins` - List all admins
-  - `POST /admins` - Create admin
-  - `PUT /admins/{id}` - Update admin
-  - `DELETE /admins/{id}` - Delete admin
-  - `PUT /admins/{id}/status` - Update admin status
+**Admin Management (Full CRUD):**
+- `GET /admins` - List all administrators
+  - Returns: Array of `AdminResponse` objects
+  - Features: Role-based filtering, status tracking
 
-- **User Management:**
-  - `GET /users` - List all users
-  - `PUT /users/{userId}/status` - Update user status
-  - `DELETE /users/{userId}` - Delete user
+- `GET /admins/{id}` - Get admin details by ID
+  - Returns: Single `AdminResponse` object
+  - Features: Existence validation, detailed error messages
 
-- **Account/Loan/Transaction Monitoring:**
-  - `GET /accounts` - All accounts (placeholder)
-  - `GET /loans` - All loans (placeholder)
-  - `PUT /loans/{loanId}/approve` - Approve loan
-  - `PUT /loans/{loanId}/reject` - Reject loan
-  - `GET /transactions` - All transactions (placeholder)
-  - `GET /transactions/suspicious` - Suspicious transactions (placeholder)
+- `POST /admins` - Create new administrator
+  - Request Body: Admin entity with required fields
+  - Features: Email uniqueness validation, password encryption
+
+- `PUT /admins/{id}` - Update administrator details
+  - Request Body: Updated admin fields
+  - Features: Partial updates, password re-encryption if changed
+
+- `DELETE /admins/{id}` - Delete administrator
+  - Features: Existence validation, cascade considerations
+
+- `PUT /admins/{id}/status` - Update admin status
+  - Request Body: `{status: "ACTIVE|INACTIVE|SUSPENDED"}`
+  - Features: Status validation, audit trail
+
+**User Management:**
+- `GET /users` - List all users
+  - Returns: Array of User entities
+  - Features: Complete user information, status tracking
+
+- `PUT /users/{userId}/status` - Update user status
+  - Request Body: `{status: "ACTIVE|SUSPENDED|CLOSED"}`
+  - Features: Status validation, immediate effect
+
+- `DELETE /users/{userId}` - Delete user account
+  - Features: Existence validation, data cleanup
+
+**System Monitoring (Placeholders for Future Implementation):**
+- `GET /accounts` - Monitor all accounts (placeholder)
+- `GET /loans` - Monitor all loans (placeholder)
+- `PUT /loans/{loanId}/approve` - Approve loan applications
+- `PUT /loans/{loanId}/reject` - Reject loan applications
+- `GET /transactions` - Monitor all transactions (placeholder)
+- `GET /transactions/suspicious` - Detect suspicious activities (placeholder)
 
 #### Service: `AdminService.java`
 **Core Methods:**
-- `authenticateAdmin(AdminLoginRequest)` - Admin login
-- `getDashboardStats()` - Statistics calculation
-- `getAllUsers()`, `updateUserStatus()` - User management
-- `getAllAdmins()`, `createAdmin()` - Admin management
+
+**Authentication:**
+```java
+public AdminResponse authenticateAdmin(AdminLoginRequest loginRequest)
+```
+- Validates admin credentials
+- Updates last login timestamp
+- Returns admin details with JWT token
+
+**Dashboard Statistics:**
+```java
+public AdminDashboardStats getDashboardStats()
+```
+- Aggregates data from multiple repositories
+- Calculates: user counts, account totals, loan amounts, transaction volumes
+- Features: Comprehensive error handling, fallback values, detailed logging
+
+**Admin CRUD Operations:**
+- `getAllAdmins()` - Retrieve all administrators
+- `getAdminById(Long id)` - Get specific admin
+- `createAdmin(Admin admin)` - Create new admin with validation
+- `updateAdmin(Long id, Admin adminDetails)` - Update admin information
+- `deleteAdmin(Long id)` - Remove admin account
+- `updateAdminStatus(Long id, AdminStatus status)` - Change admin status
+
+**User Management:**
+- `getAllUsers()` - Retrieve all users
+- `updateUserStatus(Long userId, UserStatus status)` - Modify user status
+- `deleteUser(Long userId)` - Remove user account
+
+**Key Features:**
+- Password encryption using BCrypt
+- Email uniqueness validation
+- Comprehensive error handling
+- Transaction management for data consistency
+- Audit trail with timestamps
 
 #### Entity: `Admin.java`
 **Fields:**
-- `id` (Long) - Primary key
-- `email` (String) - Unique email
-- `password` (String) - Encrypted password
-- `firstName`, `lastName` (String) - Admin names
-- `status` (AdminStatus) - ACTIVE, INACTIVE
-- `role` (String) - Admin role
+- `id` (Long) - Primary key, auto-generated
+- `firstName`, `lastName` (String) - Administrator names
+- `email` (String) - Unique email address
+- `password` (String) - BCrypt encrypted password
+- `phoneNumber` (String) - Contact number
+- `role` (AdminRole) - SUPER_ADMIN, ADMIN, MODERATOR
+- `status` (AdminStatus) - ACTIVE, INACTIVE, SUSPENDED
+- `createdAt`, `updatedAt` (LocalDateTime) - Audit timestamps
+- `lastLogin` (LocalDateTime) - Last login tracking
+
+**Enums:**
+```java
+public enum AdminRole {
+    SUPER_ADMIN, ADMIN, MODERATOR
+}
+
+public enum AdminStatus {
+    ACTIVE, INACTIVE, SUSPENDED
+}
+```
+
+#### DTO: `AdminDashboardStats.java`
+**Comprehensive Statistics Structure:**
+- User metrics: `totalUsers`, `activeUsers`, `suspendedUsers`
+- Account metrics: `totalAccounts`, `totalDeposits`
+- Loan metrics: `totalLoans`, `pendingLoans`, `totalLoanAmount`
+- Transaction metrics: `totalTransactions`, `todayTransactions`
+
+**Features:**
+- JSON property mapping with `@JsonProperty`
+- BigDecimal for precise financial calculations
+- Comprehensive getters/setters
 
 ### Frontend Implementation
 
 #### Components:
-- `AdminDashboard.js` - Main admin dashboard
-- `AdminLogin.js` - Admin login page
-- `UserManagement.js` - User management interface
-- `AccountTermination.js` - Account termination
-- `LoanApproval.js` - Loan approval interface
+
+**AdminDashboard.js - Main Dashboard:**
+- **Real-time Statistics**: Live metrics with currency formatting
+- **Quick Actions**: Navigation to all admin functions
+- **Authentication**: Token validation and auto-logout
+- **Responsive Design**: Mobile-friendly layout
+- **Error Handling**: Network error management
+
+**Key Features:**
+```javascript
+const AdminDashboard = () => {
+  const [stats, setStats] = useState(null);
+  const [adminInfo, setAdminInfo] = useState(null);
+
+  // Statistics cards with icons and formatting
+  // Quick action buttons for navigation
+  // Authentication state management
+};
+```
+
+**AdminLogin.js - Authentication:**
+- Separate admin authentication flow
+- JWT token storage in localStorage
+- Redirect handling for unauthorized access
+- Form validation and error display
+
+**UserManagement.js - User Oversight:**
+- Complete user listing with status indicators
+- Bulk operations for user management
+- Search and filtering capabilities
+- Status update functionality
+
+**LoanApproval.js - Loan Processing:**
+- Pending loan applications display
+- Approve/reject functionality
+- Loan details and credit assessment
+- Status tracking and notifications
+
+**AccountTermination.js - Account Management:**
+- Account termination procedures
+- Permanent account closure
+- Audit trail maintenance
+- Confirmation dialogs for safety
+
+#### Service Integration:
+```javascript
+// adminService.js
+export const getAdminDashboardStats = async () => {
+  const response = await api.get('/admin/dashboard/stats');
+  return response.data;
+};
+
+export const updateUserStatus = async (userId, status) => {
+  const response = await api.put(`/admin/users/${userId}/status`, { status });
+  return response.data;
+};
+```
 
 #### Key Features:
-- **Statistics Dashboard**: Real-time metrics
-- **User Management**: CRUD operations on users
-- **Account Oversight**: Freeze/unfreeze accounts
-- **Loan Processing**: Approve/reject loans
-- **Transaction Monitoring**: View all transactions
+
+**Dashboard Analytics:**
+- **Real-time Metrics**: Live updates of system statistics
+- **Visual Indicators**: Color-coded status displays
+- **Currency Formatting**: Localized INR formatting
+- **Action Buttons**: Quick navigation to management functions
+
+**Security Features:**
+- **Separate Authentication**: Independent admin login system
+- **Token Management**: Secure JWT storage and validation
+- **Auto-logout**: Session timeout and invalid token handling
+- **Role-based Access**: Different permission levels
+
+**User Interface:**
+- **Responsive Grid Layout**: Statistics cards with icons
+- **Action Cards**: Quick access to admin functions
+- **Status Indicators**: Visual status representation
+- **Navigation**: Seamless routing between admin functions
+
+**Management Capabilities:**
+- **User Oversight**: Complete user lifecycle management
+- **Account Control**: Account freezing and termination
+- **Loan Processing**: Application review and approval
+- **Transaction Monitoring**: System-wide transaction visibility
+- **Admin Management**: Hierarchical admin user management
 
 ---
 
