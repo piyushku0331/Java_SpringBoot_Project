@@ -48,6 +48,32 @@ const CreateAccount = () => {
       return;
     }
 
+    // Debug authentication status
+    console.log('=== ACCOUNT CREATION DEBUG ===');
+    console.log('User from AuthContext:', user);
+    console.log('Is authenticated:', !!user);
+    console.log('User ID:', user?.id);
+    console.log('localStorage token:', localStorage.getItem('token'));
+    console.log('localStorage user:', localStorage.getItem('user'));
+    console.log('All localStorage keys:', Object.keys(localStorage));
+    console.log('localStorage contents:', { ...localStorage });
+
+    if (!user) {
+      console.error('No user found - user is not logged in!');
+      setErrors({
+        submit: 'You must be logged in to create an account. Please log in first.'
+      });
+      return;
+    }
+
+    if (!user.id) {
+      console.error('User has no ID:', user);
+      setErrors({
+        submit: 'User information is incomplete. Please log in again.'
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const accountData = {
@@ -65,6 +91,8 @@ const CreateAccount = () => {
       });
     } catch (error) {
       console.error('Account creation error:', error);
+      console.error('Error response status:', error.response?.status);
+      console.error('Error response data:', error.response?.data);
       setErrors({
         submit: error.response?.data?.error || 'Account creation failed. Please try again.'
       });

@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,8 +19,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.lang.NonNull;
-
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -53,12 +52,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 username = jwtUtil.extractUsername(jwt);
                 System.out.println("JWT Filter - Username extracted: " + username);
+
+                // Check if token is expired
+                if (jwtUtil.isTokenExpired(jwt)) {
+                    System.out.println("JWT Filter - Token is expired for user: " + username);
+                    response.setStatus(401);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"Token expired\"}");
+                    return;
+                }
             } catch (Exception e) {
                 System.out.println("JWT Filter - Token parsing failed: " + e.getMessage());
                 logger.warn("JWT token parsing failed: " + e.getMessage());
+                response.setStatus(401);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\":\"Invalid token\"}");
+                return;
             }
         } else {
             System.out.println("JWT Filter - No Authorization header or invalid format. Header: " + authorizationHeader);
+            if (!requestURI.startsWith("/api/auth") && !requestURI.startsWith("/api/admin/login")) {
+                System.out.println("JWT Filter - Authentication required for: " + requestURI);
+                response.setStatus(401);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"error\":\"Authentication required\"}");
+                return;
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

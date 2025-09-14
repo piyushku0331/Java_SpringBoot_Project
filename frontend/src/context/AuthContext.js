@@ -20,7 +20,25 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (storedUser && token) {
       try {
-        setUser(JSON.parse(storedUser));
+        // Check if token is expired
+        const isExpired = (() => {
+          try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const currentTime = Date.now() / 1000;
+            return payload.exp < currentTime;
+          } catch (error) {
+            console.error('Error parsing token:', error);
+            return true;
+          }
+        })();
+
+        if (isExpired) {
+          console.log('Stored token is expired, clearing localStorage');
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+        } else {
+          setUser(JSON.parse(storedUser));
+        }
       } catch (error) {
         console.error('Error parsing stored user:', error);
         localStorage.removeItem('user');

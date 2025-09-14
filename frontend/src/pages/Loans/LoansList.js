@@ -50,37 +50,70 @@ const LoansList = () => {
         // Handle different response structures including string responses
         let data = [];
         let parsedResponse = response;
-        
+
         // If response is a string, try to parse it as JSON
         if (typeof response === 'string') {
           console.log('LoansList: String response detected, length:', response.length);
-          
-          try {
-            // Check if string starts with [ or { to validate it's JSON
-            const trimmed = response.trim();
-            if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) {
-              console.error('LoansList: Response does not appear to be JSON, treating as empty array');
-              parsedResponse = [];
-            } else {
-              parsedResponse = JSON.parse(trimmed);
-              console.log('LoansList: Successfully parsed JSON response');
-            }
-          } catch (parseError) {
-            console.error('LoansList: JSON parsing failed:', parseError.message);
-            
-            // Try to find and extract valid JSON array from corrupted response
-            const jsonArrayMatch = response.match(/\[[\s\S]*?\]/);
-            if (jsonArrayMatch) {
-              try {
-                parsedResponse = JSON.parse(jsonArrayMatch[0]);
-                console.log('LoansList: Successfully extracted valid JSON array from corrupted response');
-              } catch (extractError) {
-                console.error('LoansList: Failed to parse extracted JSON:', extractError);
+          console.log('LoansList: Response preview:', response.substring(0, 200));
+
+          // Check if response looks like HTML error page
+          if (response.trim().startsWith('<!DOCTYPE') || response.trim().startsWith('<html')) {
+            console.error('LoansList: ERROR - Received HTML error page instead of JSON!');
+            console.error('LoansList: HTML preview:', response.substring(0, 300));
+            parsedResponse = [];
+          } else {
+            try {
+              // Check if string starts with [ or { to validate it's JSON
+              const trimmed = response.trim();
+              if (!trimmed.startsWith('[') && !trimmed.startsWith('{')) {
+                console.error('LoansList: Response does not appear to be JSON, treating as empty array');
+                parsedResponse = [];
+              } else {
+                parsedResponse = JSON.parse(trimmed);
+                console.log('LoansList: Successfully parsed JSON response');
+              }
+            } catch (parseError) {
+              console.error('LoansList: JSON parsing failed:', parseError.message);
+
+              // TEMPORARY WORKAROUND: Try to extract valid JSON from the corrupted response
+              console.log('LoansList: Attempting to extract valid JSON from corrupted response...');
+
+              // Look for the first complete JSON object in the response
+              const startBrace = response.indexOf('[');
+              if (startBrace !== -1) {
+                let braceCount = 0;
+                let endIndex = -1;
+
+                for (let i = startBrace; i < response.length; i++) {
+                  if (response[i] === '[') braceCount++;
+                  else if (response[i] === ']') {
+                    braceCount--;
+                    if (braceCount === 0) {
+                      endIndex = i;
+                      break;
+                    }
+                  }
+                }
+
+                if (endIndex !== -1) {
+                  const potentialJson = response.substring(startBrace, endIndex + 1);
+                  console.log('LoansList: Extracted potential JSON:', potentialJson.substring(0, 200) + '...');
+
+                  try {
+                    parsedResponse = JSON.parse(potentialJson);
+                    console.log('LoansList: SUCCESS - Extracted valid JSON array with', parsedResponse.length, 'loans');
+                  } catch (extractError) {
+                    console.error('LoansList: Extracted JSON is still invalid:', extractError.message);
+                    parsedResponse = [];
+                  }
+                } else {
+                  console.error('LoansList: Could not find valid JSON array boundaries');
+                  parsedResponse = [];
+                }
+              } else {
+                console.error('LoansList: No JSON array found in response');
                 parsedResponse = [];
               }
-            } else {
-              console.error('LoansList: No valid JSON array found in response, using empty array');
-              parsedResponse = [];
             }
           }
         }

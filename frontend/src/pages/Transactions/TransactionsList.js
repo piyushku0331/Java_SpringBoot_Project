@@ -100,7 +100,7 @@ const TransactionsList = () => {
       <div className="transactions-header animate-slideInUp">
         <h1>Transaction History</h1>
         <div className="transactions-actions">
-          <Link to="/transactions/new">
+          <Link to="/transactions/create">
             <Button variant="primary" className="animate-slideInRight">New Transaction</Button>
           </Link>
         </div>

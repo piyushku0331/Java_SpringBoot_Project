@@ -107,9 +107,27 @@
   border: 2px solid #e1e5e9;
   border-radius: 8px;
   font-size: 16px;
-  background: white;
+  background: #000000 !important;
+  color: #ffffff !important;
   cursor: pointer;
   min-width: 150px;
+}
+
+.filter-dropdown select option {
+  background: #000000 !important;
+  color: #ffffff !important;
+  padding: 10px;
+  border: none;
+}
+
+.filter-dropdown select option:hover {
+  background: #333333 !important;
+  color: #ffffff !important;
+}
+
+.filter-dropdown select option:checked {
+  background: #667eea !important;
+  color: #ffffff !important;
 }
 
 .users-table-container {
