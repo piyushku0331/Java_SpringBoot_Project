@@ -1,6 +1,6 @@
 # Remaining Modules Documentation - NextGen Bank
 
-This document provides detailed information about the remaining modules that need to be implemented in the NextGen Bank project. These modules include Account Management, Transaction Management, User Management, and Admin Management.
+This document provides detailed information about the remaining modules that need to be implemented in the NextGen Bank project. These modules include Account Management, User Management, and Admin Management.
 
 ## 📋 Module Overview
 
@@ -11,7 +11,6 @@ This document provides detailed information about the remaining modules that nee
 
 ### 🔄 Remaining Modules
 - **Account Management**: CRUD operations for bank accounts
-- **Transaction Management**: Transaction creation, history, transfers
 - **User Management**: User profile management
 
 ---
@@ -99,87 +98,6 @@ export const getCustomerAccounts = async (userId) => {
 
 ---
 
-## 💸 Transaction Management Module
-
-### Backend Implementation
-
-#### Controller: `TransactionController.java`
-**Base URL**: `/api`
-
-**Endpoints:**
-- `GET /transactions` - Get transactions (with optional account filter)
-  - Parameters: `accountId` (optional query param)
-  - Returns: List of Transaction objects
-  - Security: User authentication, ownership verification
-
-- `GET /customer/transactions` - Customer-specific transactions
-  - Same as above, customer-focused
-
-- `GET /transactions/{transactionId}` - Get transaction details
-  - Returns: Single Transaction object
-
-- `GET /accounts/{accountId}/transactions` - Account-specific transactions
-  - Validation: Numeric account ID
-
-- `POST /transactions` - Create new transaction
-  - Request Body: `{accountId, transactionType, amount, description}`
-  - Validation: Required fields, amount validation
-  - Types: DEPOSIT, WITHDRAWAL, TRANSFER
-
-- `POST /transactions/transfer` - Transfer between accounts
-  - Request Body: `{fromAccountId, toAccountNumber, amount, description}`
-  - Validation: Account existence, sufficient balance
-
-**Key Functions:**
-- `getCurrentUser()` - Extract user from JWT token
-- `validateCreateTransactionRequest()` - Input validation
-- `validateTransferFundsRequest()` - Transfer validation
-- `getTransactionsForUser()` - User-specific transaction filtering
-- `createErrorResponse()` - Error formatting
-
-#### Service: `TransactionService.java`
-**Core Methods:**
-- `getTransactionsByUserId(Long userId)` - User transactions
-- `getTransactionsByAccountId(Long accountId)` - Account transactions
-- `createTransaction(Long accountId, String type, BigDecimal amount, String description)` - Create transaction
-- `transferFunds(Long fromAccountId, String toAccountNumber, BigDecimal amount, String description)` - Transfer funds
-- `isAccountOwnedByUser(Long accountId, Long userId)` - Ownership verification
-
-#### Entity: `Transaction.java`
-**Fields:**
-- `id` (Long) - Primary key
-- `transactionDate` (LocalDateTime) - Transaction timestamp
-- `amount` (BigDecimal) - Transaction amount
-- `type` (String) - DEPOSIT, WITHDRAWAL, TRANSFER
-- `description` (String) - Transaction description
-- `account` (Account) - Associated account
-- `toAccountNumber` (String) - For transfers
-
-### Frontend Implementation
-
-#### Components:
-- `TransactionsList.js` - Transaction history with filtering
-- `CreateTransaction.js` - Transaction creation form
-- `TransactionDetail.js` - Individual transaction details
-
-#### Key Features:
-- **Account Filtering**: Dropdown to filter by account
-- **Date Formatting**: Custom date/time display
-- **Currency Formatting**: Localized currency display
-- **Transaction Types**: Color-coded transaction types
-- **Responsive Table**: Mobile-friendly transaction table
-
-#### Service Integration:
-```javascript
-// transactionService.js
-export const getTransactions = async (accountId = null) => {
-  const url = accountId ? `/transactions?accountId=${accountId}` : '/transactions';
-  const response = await api.get(url);
-  return response.data;
-};
-```
-
----
 
 ## 👤 User Management Module
 
@@ -528,164 +446,159 @@ This comprehensive import analysis helps understand the project's architecture, 
    - Password encryption with BCrypt
 
 ### Database Design
-4. **What are the relationships between User, Account, and Transaction entities?**
-   - User → Account: One-to-Many
-   - Account → Transaction: One-to-Many
-   - User → Transaction: One-to-Many (through Account)
-
-5. **How are transactions handled to ensure data consistency?**
+4. **How are database operations handled to ensure data consistency?**
    - Service layer manages transaction boundaries
    - Balance updates are atomic operations
-   - Transfer operations use database transactions
+   - Database transactions ensure ACID properties
 
 ### Frontend Architecture
-6. **How does the React Context API manage authentication state?**
+5. **How does the React Context API manage authentication state?**
    - AuthContext provides user state globally
    - Login/logout functions update context
    - Protected routes check authentication status
 
-7. **Explain the component structure and reusability**
+6. **Explain the component structure and reusability**
    - Common components (Button, Card) for consistency
    - Page components for specific features
    - Separation of concerns between UI and logic
 
 ### API Design
-8. **How are RESTful conventions followed in the API design?**
+7. **How are RESTful conventions followed in the API design?**
    - Proper HTTP methods (GET, POST, PUT, DELETE)
    - Resource-based URLs
    - Consistent response formats
    - Error handling with appropriate status codes
 
-9. **Explain the validation and error handling strategy**
+8. **Explain the validation and error handling strategy**
    - Request validation in controllers
    - Custom exception handling
    - Standardized error response format
    - Client-side validation in forms
 
 ### Performance & Security
-10. **What measures are taken for API security?**
+9. **What measures are taken for API security?**
     - JWT token validation
     - CORS configuration
     - Input validation and sanitization
     - SQL injection prevention with JPA
 
-11. **How does the application handle concurrent transactions?**
-    - Database-level locking for balance updates
-    - Optimistic locking for data consistency
-    - Transaction isolation levels
+10. **How does the application handle concurrent database operations?**
+   - Database-level locking for balance updates
+   - Optimistic locking for data consistency
+   - Database isolation levels
 
-12. **Explain the logging strategy used in the application**
+11. **Explain the logging strategy used in the application**
     - SLF4J with different log levels
     - Structured logging with context
     - Error tracking and debugging information
 
 ### Deployment & DevOps
-13. **How would you deploy this application to production?**
+12. **How would you deploy this application to production?**
     - Backend: JAR file with embedded Tomcat
     - Frontend: Build and serve static files
     - Database: MySQL in cloud environment
     - Reverse proxy (Nginx) for routing
 
-14. **What monitoring and logging would you implement?**
+13. **What monitoring and logging would you implement?**
     - Application metrics with Spring Boot Actuator
     - Centralized logging with ELK stack
     - Health checks and alerts
     - Performance monitoring
 
 ### Code Quality
-15. **How is code maintainability ensured?**
+14. **How is code maintainability ensured?**
     - Clean code principles
     - Separation of concerns
     - Consistent naming conventions
     - Documentation and comments
 
-16. **Explain the testing strategy for this application**
+15. **Explain the testing strategy for this application**
     - Unit tests for services
     - Integration tests for controllers
     - Frontend component tests
     - End-to-end testing with Selenium
 
 ### Import & Dependency Management
-17. **Why is `BigDecimal` used instead of `double` or `float` for financial calculations?**
+16. **Why is `BigDecimal` used instead of `double` or `float` for financial calculations?**
     - `BigDecimal` provides exact decimal arithmetic, preventing floating-point precision errors
     - Essential for banking applications where accuracy is critical
     - Avoids rounding errors that can occur with binary floating-point representations
 
-18. **Explain the purpose of `@JsonIgnore` annotation in entity classes**
+17. **Explain the purpose of `@JsonIgnore` annotation in entity classes**
     - Prevents infinite recursion during JSON serialization of bidirectional relationships
     - Improves performance by avoiding unnecessary data serialization
     - Maintains data integrity while controlling API response structure
 
-19. **Why are JPA annotations like `@Entity`, `@Table`, `@Id` important?**
+18. **Why are JPA annotations like `@Entity`, `@Table`, `@Id` important?**
     - `@Entity`: Marks class as JPA entity for database mapping
     - `@Table`: Specifies database table name and properties
     - `@Id`: Identifies primary key field
     - `@GeneratedValue`: Auto-generates primary key values
     - Enables ORM functionality and automatic CRUD operations
 
-20. **What is the role of `@Autowired` in Spring dependency injection?**
+19. **What is the role of `@Autowired` in Spring dependency injection?**
     - Enables automatic dependency injection by Spring container
     - Reduces manual object creation and coupling
     - Supports constructor, setter, and field injection
     - Facilitates loose coupling and easier testing
 
-21. **Explain the use of `Optional` in service methods**
+20. **Explain the use of `Optional` in service methods**
     - Provides null-safe operations and prevents NullPointerException
     - Forces explicit null checking with `isPresent()` and `orElseThrow()`
     - Improves code readability and reduces defensive programming
     - Modern Java best practice for nullable return values
 
-22. **Why is `LocalDateTime` preferred over `Date` or `Calendar`?**
+21. **Why is `LocalDateTime` preferred over `Date` or `Calendar`?**
     - Thread-safe and immutable design
     - Better API with clear method names
     - Supports nanosecond precision
     - Easier to work with time zones and formatting
     - Modern Java date/time API (introduced in Java 8)
 
-23. **What is the purpose of `@Transactional` annotation?**
+22. **What is the purpose of `@Transactional` annotation?**
     - Ensures database operations are atomic (all-or-nothing)
     - Automatically manages transaction boundaries
     - Provides rollback capability on exceptions
     - Critical for data consistency in multi-step operations
 
-24. **Explain the use of React hooks like `useState` and `useEffect`**
+23. **Explain the use of React hooks like `useState` and `useEffect`**
     - `useState`: Manages component state in functional components
     - `useEffect`: Handles side effects like API calls and subscriptions
     - Enables functional components to have state and lifecycle
     - More concise than class component lifecycle methods
 
-25. **Why is Axios used instead of native `fetch` API?**
+24. **Why is Axios used instead of native `fetch` API?**
     - Automatic JSON transformation
     - Request/response interceptors for authentication
     - Better error handling and timeout management
     - Consistent API across different browsers
     - Built-in CSRF protection capabilities
 
-26. **What is the role of `SecurityContextHolder` in Spring Security?**
+25. **What is the role of `SecurityContextHolder` in Spring Security?**
     - Provides access to current security context
     - Stores authentication information for current thread
     - Enables retrieval of authenticated user details
     - Thread-local storage for security information
 
-27. **Explain the purpose of `@PrePersist` and `@PreUpdate` annotations**
+26. **Explain the purpose of `@PrePersist` and `@PreUpdate` annotations**
     - `@PrePersist`: Executes before entity is saved to database
     - `@PreUpdate`: Executes before entity is updated in database
     - Used for automatic field population (timestamps, IDs)
     - Ensures data consistency and audit trails
 
-28. **Why are enumerated types (`enum`) used in entities?**
+27. **Why are enumerated types (`enum`) used in entities?**
     - Provides type safety and prevents invalid values
     - Self-documenting code with meaningful names
     - Database-level constraints through JPA
     - Easier validation and business logic implementation
 
-29. **What is the significance of `@CrossOrigin` annotation?**
+28. **What is the significance of `@CrossOrigin` annotation?**
     - Enables Cross-Origin Resource Sharing (CORS)
     - Allows frontend to make requests to backend from different origin
     - Configurable origins, methods, and headers
     - Essential for separate frontend/backend deployments
 
-30. **Explain the use of `UUID` for transaction IDs**
+29. **Explain the use of `UUID` for unique identifiers**
     - Generates universally unique identifiers
     - Prevents ID collisions in distributed systems
     - No sequential pattern that could be exploited
@@ -707,7 +620,7 @@ This comprehensive import analysis helps understand the project's architecture, 
 3. Add input validation and form handling
 4. Create unit and integration tests
 5. Add comprehensive logging
-6. Add transaction monitoring capabilities
+6. Add application monitoring capabilities
 
 ### Best Practices Implemented
 - RESTful API design
